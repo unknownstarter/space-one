@@ -13,6 +13,11 @@ export class HomeScene extends Phaser.Scene {
     private planets: BackgroundObj[] = [];
     private worldScroll: Phaser.Math.Vector2;
 
+    private titleText!: Phaser.GameObjects.Text;
+    private domElement!: Phaser.GameObjects.DOMElement;
+    private startButton!: Button;
+    private instructionsText!: Phaser.GameObjects.Text;
+
     constructor() {
         super('HomeScene');
         this.worldScroll = new Phaser.Math.Vector2(0, 0);
@@ -25,12 +30,24 @@ export class HomeScene extends Phaser.Scene {
         this.createStars();
         this.createPlanets();
 
+        // Initial Layout
+        this.createUI();
+
+        this.scale.on('resize', this.handleResize, this);
+    }
+
+    private createUI() {
         const cx = this.scale.width / 2;
         const cy = this.scale.height / 2;
+        const isMobile = this.scale.width < 600;
 
         // Title
-        this.add.text(cx, cy - 200, 'Space One!', {
-            fontSize: '64px',
+        // Scale font based on width relative to base 800px or use clamp
+        const fontSizeVal = isMobile ? Math.max(32, this.scale.width * 0.1) : 64;
+
+        if (this.titleText) this.titleText.destroy();
+        this.titleText = this.add.text(cx, cy - (isMobile ? 120 : 200), 'Space One!', {
+            fontSize: `${fontSizeVal}px`,
             color: '#ffffff',
             fontStyle: 'bold',
             stroke: '#00ffff',
@@ -38,29 +55,32 @@ export class HomeScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // Nickname Input
-        // Note: Check if DOM is enabled in game config
+        const inputWidth = isMobile ? Math.min(250, this.scale.width * 0.8) : 250;
+        const inputFontSize = isMobile ? 18 : 24;
+
         const inputHTML = `
             <input type="text" name="nickname" placeholder="Enter Nickname" 
-            style="font-size: 24px; padding: 10px; width: 250px; text-align: center; border-radius: 8px; border: 2px solid #00ffff; background: #000; color: #fff; outline: none;">
+            style="font-size: ${inputFontSize}px; padding: 10px; width: ${inputWidth}px; text-align: center; border-radius: 8px; border: 2px solid #00ffff; background: #000; color: #fff; outline: none;">
         `;
 
-        const domElement = this.add.dom(cx, cy - 50).createFromHTML(inputHTML);
-        domElement.setOrigin(0.5);
+        if (this.domElement) this.domElement.destroy();
+        this.domElement = this.add.dom(cx, cy - (isMobile ? 20 : 50)).createFromHTML(inputHTML);
+        this.domElement.setOrigin(0.5);
 
         // Start Button
-        new Button(this, cx, cy + 100, 'Game Start', () => {
-            const input = domElement.getChildByName('nickname') as HTMLInputElement;
+        if (this.startButton) this.startButton.destroy();
+        this.startButton = new Button(this, cx, cy + (isMobile ? 80 : 100), 'Game Start', () => {
+            const input = this.domElement.getChildByName('nickname') as HTMLInputElement;
             const nickname = input ? input.value.trim() : 'Pilot';
             this.scene.start('GameScene', { nickname: nickname || 'Pilot' });
         });
 
         // Instructions
-        this.add.text(cx, this.scale.height - 50, 'Use ARROW KEYS to Move', {
-            fontSize: '18px',
+        if (this.instructionsText) this.instructionsText.destroy();
+        this.instructionsText = this.add.text(cx, this.scale.height - (isMobile ? 30 : 50), isMobile ? 'Tap / Drag to Move' : 'Use ARROW KEYS', {
+            fontSize: isMobile ? '14px' : '18px',
             color: '#aaaaaa'
         }).setOrigin(0.5);
-
-        this.scale.on('resize', this.handleResize, this);
     }
 
     update(_time: number, delta: number) {
@@ -72,21 +92,14 @@ export class HomeScene extends Phaser.Scene {
     }
 
     private updateBackground() {
-        // Simulate camera moving UP (so objects move DOWN)
         const h = this.scale.height;
 
         const updateObj = (obj: BackgroundObj) => {
-            // Apply simple scroll based on depth
-            // We'll mimic "moving forward" by creating a radial expansion or just vertical scroll?
-            // Let's do simple vertical scroll for Home screen
-            obj.worldPos.y += 0.5 * obj.depth; // Move down slowly
+            obj.worldPos.y += 0.5 * obj.depth;
 
-            // Wrap logic
             const rangeH = h * 1.5;
             if (obj.worldPos.y > rangeH / 2) obj.worldPos.y -= rangeH;
 
-            // Convert "World" to "Screen" (Center origin)
-            // Just map directly for home screen
             obj.sprite.y = (this.scale.height / 2) + obj.worldPos.y;
             obj.sprite.x = (this.scale.width / 2) + obj.worldPos.x;
         };
@@ -144,6 +157,6 @@ export class HomeScene extends Phaser.Scene {
 
     private handleResize(gameSize: Phaser.Structs.Size) {
         this.cameras.main.setViewport(0, 0, gameSize.width, gameSize.height);
-        // Could re-center UI elements here if needed, but for now simple refresh is okay
+        this.createUI(); // Re-create UI on resize for responsive layout
     }
 }

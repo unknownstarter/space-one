@@ -108,13 +108,22 @@ export class GameScene extends Phaser.Scene {
             this.cursors = this.input.keyboard.createCursorKeys();
         }
 
+        // Support up to 2 pointers for multi-touch (prevents locking)
+        this.input.addPointer(1);
+
         this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
             if (this.isGameOver) return;
             if (!pointer.isDown) return;
 
-            const sensitivity = 1.0;
+            // Sensitivity 2.0 makes it feel "snappier" on mobile
+            const sensitivity = 2.0;
+
+            // Use local delta if possible or calculate manually
             const dx = (pointer.x - pointer.prevPosition.x) * sensitivity;
             const dy = (pointer.y - pointer.prevPosition.y) * sensitivity;
+
+            // Prevent small jitters?
+            if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return;
 
             this.movePlayer(dx, dy);
         });
