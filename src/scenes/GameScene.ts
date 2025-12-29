@@ -30,7 +30,7 @@ export class GameScene extends Phaser.Scene {
     private player!: Phaser.GameObjects.Image;
     private enemyGroup!: Phaser.GameObjects.Group;
 
-    private gameLayer!: Phaser.GameObjects.Container; // New: Moves with World
+    private gameLayer!: Phaser.GameObjects.Container;
     private explosions!: Phaser.GameObjects.Particles.ParticleEmitter;
     private cometTrails!: Phaser.GameObjects.Particles.ParticleEmitter;
 
@@ -43,6 +43,15 @@ export class GameScene extends Phaser.Scene {
     private slowMoTimer: number = 0;
 
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+
+    // Joystick State
+    private isDragging: boolean = false;
+    private touchOrigin: Phaser.Math.Vector2 = new Phaser.Math.Vector2();
+    private touchCurrent: Phaser.Math.Vector2 = new Phaser.Math.Vector2();
+    private joystickBase!: Phaser.GameObjects.Arc;
+    private joystickStick!: Phaser.GameObjects.Arc;
+    private targetVelocity: Phaser.Math.Vector2 = new Phaser.Math.Vector2();
+
 
     constructor() {
         super('GameScene');
@@ -62,14 +71,14 @@ export class GameScene extends Phaser.Scene {
         this.slowMoTimer = 0;
         this.playerWorldPos.set(0, 0);
 
-        // Background (Stars/Planets - Parallax managed manually)
+        // Background
         this.createStars();
         this.createPlanets();
 
-        // Game Layer (Enemies, Particles)
+        // Game Layer
         this.gameLayer = this.add.container(0, 0);
 
-        // Trails (Added to Layer)
+        // Trails
         this.cometTrails = this.add.particles(0, 0, 'particle', {
             lifespan: 500,
             speed: { min: 10, max: 20 },
@@ -81,11 +90,11 @@ export class GameScene extends Phaser.Scene {
         });
         this.gameLayer.add(this.cometTrails);
 
-        // Player (Fixed Center - OUTSIDE GameLayer)
+        // Player
         this.player = this.add.image(0, 0, 'ship');
         this.player.setDepth(10);
 
-        // Explosions (Added to Layer)
+        // Explosions
         this.explosions = this.add.particles(0, 0, 'particle', {
             lifespan: 500,
             speed: { min: 50, max: 150 },
@@ -104,41 +113,82 @@ export class GameScene extends Phaser.Scene {
 
         this.spawner = new Spawner(this);
 
-        if (this.input.keyboard) {
-            this.cursors = this.input.keyboard.createCursorKeys();
-        }
+        // Joystick Visuals (Floating)
+        this.joystickBase = this.add.circle(0, 0, 50, 0xffffff, 0.1).setDepth(200).setVisible(false);
+        this.joystickStick = this.add.circle(0, 0, 20, 0xffffff, 0.5).setDepth(200).setVisible(false);
 
-        // Support up to 2 pointers for multi-touch (prevents locking)
-        this.input.addPointer(1);
-
-        this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
-            if (this.isGameOver) return;
-            if (!pointer.isDown) return;
-
-            // Sensitivity 2.0 makes it feel "snappier" on mobile
-            const sensitivity = 2.0;
-
-            // Use local delta if possible or calculate manually
-            const dx = (pointer.x - pointer.prevPosition.x) * sensitivity;
-            const dy = (pointer.y - pointer.prevPosition.y) * sensitivity;
-
-            // Prevent small jitters?
-            if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) return;
-
-            this.movePlayer(dx, dy);
-        });
+        this.setupInput();
 
         this.scale.on('resize', this.handleResize, this);
         this.events.on('resume', this.handleResume, this);
     }
 
-    private movePlayer(dx: number, dy: number) {
-        this.playerWorldPos.x += dx;
-        this.playerWorldPos.y += dy;
+    private setupInput() {
+        if (this.input.keyboard) {
+            this.cursors = this.input.keyboard.createCursorKeys();
+        }
 
-        if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
-            const angle = Math.atan2(dy, dx);
-            this.player.setRotation(angle + Math.PI / 2);
+        this.input.addPointer(1); // Multitouch support
+
+        this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+            if (this.isGameOver) return;
+
+            this.isDragging = true;
+            this.touchOrigin.set(pointer.x, pointer.y);
+            this.touchCurrent.set(pointer.x, pointer.y);
+            this.updateJoystickVisuals();
+        });
+
+        this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
+            if (!this.isDragging) return;
+            if (!pointer.isDown) { // Safety check
+                this.isDragging = false;
+                this.joystickBase.setVisible(false);
+                this.joystickStick.setVisible(false);
+                this.targetVelocity.set(0, 0);
+                return;
+            }
+
+            this.touchCurrent.set(pointer.x, pointer.y);
+            this.updateJoystickVisuals();
+        });
+
+        this.input.on('pointerup', () => {
+            this.isDragging = false;
+            this.joystickBase.setVisible(false);
+            this.joystickStick.setVisible(false);
+            this.targetVelocity.set(0, 0);
+        });
+    }
+
+    private updateJoystickVisuals() {
+        // Calculate Vector
+        const maxDist = 50;
+        const vec = this.touchCurrent.clone().subtract(this.touchOrigin);
+        const dist = vec.length();
+
+        // Visualize
+        this.joystickBase.setPosition(this.touchOrigin.x, this.touchOrigin.y);
+        this.joystickBase.setVisible(true);
+
+        const clampedDist = Math.min(dist, maxDist);
+        const angle = vec.angle();
+
+        const stickX = this.touchOrigin.x + Math.cos(angle) * clampedDist;
+        const stickY = this.touchOrigin.y + Math.sin(angle) * clampedDist;
+
+        this.joystickStick.setPosition(stickX, stickY);
+        this.joystickStick.setVisible(true);
+
+        // Set Control Velocity (0-1 range) based on distance? 
+        // Or just normalized direction if passed a threshold?
+        // "Natural" usually means proportional speed up to max.
+
+        if (dist > 5) {
+            const power = Math.min(dist / maxDist, 1.0);
+            this.targetVelocity.set(Math.cos(angle), Math.sin(angle)).scale(power);
+        } else {
+            this.targetVelocity.set(0, 0);
         }
     }
 
@@ -179,7 +229,6 @@ export class GameScene extends Phaser.Scene {
         if (e.sprite) e.sprite.destroy();
 
         if (explode) {
-            // Emit at WorldPos (Container handles offset)
             this.explosions.emitParticleAt(e.worldPos.x, e.worldPos.y, 10);
         }
 
@@ -236,17 +285,41 @@ export class GameScene extends Phaser.Scene {
             return;
         }
 
+        // PLAYER MOVEMENT LOGIC
+        let dx = 0;
+        let dy = 0;
+        const playerSpeed = 300; // Pixels per second
+
+        // Keyboard (Priority?)
         if (this.cursors) {
-            const speed = 300 * (delta / 1000);
-            let dx = 0;
-            let dy = 0;
-            if (this.cursors.left.isDown) dx -= speed;
-            if (this.cursors.right.isDown) dx += speed;
-            if (this.cursors.up.isDown) dy -= speed;
-            if (this.cursors.down.isDown) dy += speed;
-            if (dx !== 0 || dy !== 0) {
-                this.movePlayer(dx, dy);
+            if (this.cursors.left.isDown) dx -= 1;
+            if (this.cursors.right.isDown) dx += 1;
+            if (this.cursors.up.isDown) dy -= 1;
+            if (this.cursors.down.isDown) dy += 1;
+        }
+
+        // Joystick (Override if active)
+        if (this.isDragging) {
+            dx = this.targetVelocity.x;
+            dy = this.targetVelocity.y;
+        }
+
+        // Apply Movement
+        if (dx !== 0 || dy !== 0) {
+            // Normalize if Keyboard
+            if (!this.isDragging && (dx !== 0 || dy !== 0)) {
+                const mag = Math.sqrt(dx * dx + dy * dy);
+                dx /= mag;
+                dy /= mag;
             }
+
+            const moveDist = playerSpeed * (delta / 1000);
+            this.playerWorldPos.x += dx * moveDist;
+            this.playerWorldPos.y += dy * moveDist;
+
+            // Rotation
+            const angle = Math.atan2(dy, dx);
+            this.player.setRotation(angle + Math.PI / 2);
         }
 
         this.invincibilityTimer = Math.max(0, this.invincibilityTimer - delta);
@@ -262,6 +335,7 @@ export class GameScene extends Phaser.Scene {
         // MOVE GAME LAYER
         this.gameLayer.setPosition(this.worldOffset.x, this.worldOffset.y);
 
+        // Difficulty
         const diffParams = DifficultySystem.getParams(this.timeAlive);
         const speedMultiplier = (this.slowMoTimer > 0) ? CONSTANTS.SLOW_FACTOR : 1.0;
         const currentParams = { ...diffParams, speed: diffParams.speed * speedMultiplier };
@@ -334,7 +408,6 @@ export class GameScene extends Phaser.Scene {
             }
 
             if (enemy.sprite) {
-                // PURE WORLD POSITION (Container handles offset)
                 enemy.sprite.setPosition(enemy.worldPos.x, enemy.worldPos.y);
 
                 if (enemy.type === 'missile') {
@@ -343,7 +416,6 @@ export class GameScene extends Phaser.Scene {
                     enemy.sprite.setRotation(enemy.sprite.rotation + 0.05);
                 }
 
-                // Emit Comet Trail (At WorldPos)
                 if (enemy.type === 'asteroid' || enemy.type === 'missile') {
                     this.cometTrails.emitParticleAt(enemy.worldPos.x, enemy.worldPos.y, 1);
                 }
@@ -407,6 +479,12 @@ export class GameScene extends Phaser.Scene {
             score: this.timeAlive,
             usedContinue: this.usedContinue
         });
+
+        // Cleanup Input
+        this.isDragging = false;
+        this.joystickBase.setVisible(false);
+        this.joystickStick.setVisible(false);
+        this.targetVelocity.set(0, 0);
     }
 
     private handleResize(gameSize: Phaser.Structs.Size) {
