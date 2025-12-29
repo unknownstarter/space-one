@@ -437,8 +437,13 @@ export class GameScene extends Phaser.Scene {
             if (dy < -rangeH / 2) obj.worldPos.y += rangeH;
             if (dy > rangeH / 2) obj.worldPos.y -= rangeH;
 
-            const cx = obj.worldPos.x + this.worldOffset.x * obj.depth;
-            const cy = obj.worldPos.y + this.worldOffset.y * obj.depth;
+            // Parallax: closer objects (higher depth) move more with camera
+            // Screen position = center + (relative distance from player * parallax factor)
+            const relativeX = obj.worldPos.x - this.playerWorldPos.x;
+            const relativeY = obj.worldPos.y - this.playerWorldPos.y;
+
+            const cx = (this.scale.width / 2) + (relativeX * obj.depth);
+            const cy = (this.scale.height / 2) + (relativeY * obj.depth);
 
             obj.sprite.setPosition(cx, cy);
         };
