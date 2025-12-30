@@ -426,26 +426,25 @@ export class GameScene extends Phaser.Scene {
         const h = this.scale.height;
 
         const updateBackgroundObj = (obj: { worldPos: Phaser.Math.Vector2, depth: number, sprite: Phaser.GameObjects.Image }) => {
-            // Calculate screen position with parallax
-            const screenX = (this.scale.width / 2) + (obj.worldPos.x - this.playerWorldPos.x) * obj.depth;
-            const screenY = (this.scale.height / 2) + (obj.worldPos.y - this.playerWorldPos.y) * obj.depth;
+            const rangeW = w * 2.5;
+            const rangeH = h * 2.5;
 
-            // Wrap based on screen position
-            const wrapMargin = Math.max(w, h);
+            let dx = obj.worldPos.x - this.playerWorldPos.x;
+            let dy = obj.worldPos.y - this.playerWorldPos.y;
 
-            if (screenX < -wrapMargin) {
-                obj.worldPos.x += (w * 2.5) / obj.depth;
-            } else if (screenX > w + wrapMargin) {
-                obj.worldPos.x -= (w * 2.5) / obj.depth;
-            }
+            if (dx < -rangeW / 2) obj.worldPos.x += rangeW;
+            if (dx > rangeW / 2) obj.worldPos.x -= rangeW;
+            if (dy < -rangeH / 2) obj.worldPos.y += rangeH;
+            if (dy > rangeH / 2) obj.worldPos.y -= rangeH;
 
-            if (screenY < -wrapMargin) {
-                obj.worldPos.y += (h * 2.5) / obj.depth;
-            } else if (screenY > h + wrapMargin) {
-                obj.worldPos.y -= (h * 2.5) / obj.depth;
-            }
+            // Proper parallax: screen center + (world offset from player * depth)
+            const offsetX = (obj.worldPos.x - this.playerWorldPos.x) * obj.depth;
+            const offsetY = (obj.worldPos.y - this.playerWorldPos.y) * obj.depth;
 
-            obj.sprite.setPosition(screenX, screenY);
+            const cx = (w / 2) + offsetX;
+            const cy = (h / 2) + offsetY;
+
+            obj.sprite.setPosition(cx, cy);
         };
 
         this.stars.forEach(updateBackgroundObj);
