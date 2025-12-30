@@ -426,26 +426,26 @@ export class GameScene extends Phaser.Scene {
         const h = this.scale.height;
 
         const updateBackgroundObj = (obj: { worldPos: Phaser.Math.Vector2, depth: number, sprite: Phaser.GameObjects.Image }) => {
-            const rangeW = w * 2.5;
-            const rangeH = h * 2.5;
+            // Calculate screen position with parallax
+            const screenX = (this.scale.width / 2) + (obj.worldPos.x - this.playerWorldPos.x) * obj.depth;
+            const screenY = (this.scale.height / 2) + (obj.worldPos.y - this.playerWorldPos.y) * obj.depth;
 
-            let dx = obj.worldPos.x - this.playerWorldPos.x;
-            let dy = obj.worldPos.y - this.playerWorldPos.y;
+            // Wrap based on screen position
+            const wrapMargin = Math.max(w, h);
 
-            if (dx < -rangeW / 2) obj.worldPos.x += rangeW;
-            if (dx > rangeW / 2) obj.worldPos.x -= rangeW;
-            if (dy < -rangeH / 2) obj.worldPos.y += rangeH;
-            if (dy > rangeH / 2) obj.worldPos.y -= rangeH;
+            if (screenX < -wrapMargin) {
+                obj.worldPos.x += (w * 2.5) / obj.depth;
+            } else if (screenX > w + wrapMargin) {
+                obj.worldPos.x -= (w * 2.5) / obj.depth;
+            }
 
-            // Parallax: closer objects (higher depth) move more with camera
-            // Screen position = center + (relative distance from player * parallax factor)
-            const relativeX = obj.worldPos.x - this.playerWorldPos.x;
-            const relativeY = obj.worldPos.y - this.playerWorldPos.y;
+            if (screenY < -wrapMargin) {
+                obj.worldPos.y += (h * 2.5) / obj.depth;
+            } else if (screenY > h + wrapMargin) {
+                obj.worldPos.y -= (h * 2.5) / obj.depth;
+            }
 
-            const cx = (this.scale.width / 2) + (relativeX * obj.depth);
-            const cy = (this.scale.height / 2) + (relativeY * obj.depth);
-
-            obj.sprite.setPosition(cx, cy);
+            obj.sprite.setPosition(screenX, screenY);
         };
 
         this.stars.forEach(updateBackgroundObj);
