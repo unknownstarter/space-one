@@ -425,7 +425,8 @@ export class GameScene extends Phaser.Scene {
         const w = this.scale.width;
         const h = this.scale.height;
 
-        const updateBackgroundObj = (obj: { worldPos: Phaser.Math.Vector2, depth: number, sprite: Phaser.GameObjects.Image }) => {
+        // Stars wrap infinitely
+        const updateStar = (obj: { worldPos: Phaser.Math.Vector2, depth: number, sprite: Phaser.GameObjects.Image }) => {
             const rangeW = w * 2.5;
             const rangeH = h * 2.5;
 
@@ -437,7 +438,6 @@ export class GameScene extends Phaser.Scene {
             if (dy < -rangeH / 2) obj.worldPos.y += rangeH;
             if (dy > rangeH / 2) obj.worldPos.y -= rangeH;
 
-            // Proper parallax: screen center + (world offset from player * depth)
             const offsetX = (obj.worldPos.x - this.playerWorldPos.x) * obj.depth;
             const offsetY = (obj.worldPos.y - this.playerWorldPos.y) * obj.depth;
 
@@ -447,8 +447,24 @@ export class GameScene extends Phaser.Scene {
             obj.sprite.setPosition(cx, cy);
         };
 
-        this.stars.forEach(updateBackgroundObj);
-        this.planets.forEach(updateBackgroundObj);
+        // Planets have fixed world positions - only show when in range
+        const updatePlanet = (obj: { worldPos: Phaser.Math.Vector2, depth: number, sprite: Phaser.GameObjects.Image }) => {
+            const offsetX = (obj.worldPos.x - this.playerWorldPos.x) * obj.depth;
+            const offsetY = (obj.worldPos.y - this.playerWorldPos.y) * obj.depth;
+
+            const cx = (w / 2) + offsetX;
+            const cy = (h / 2) + offsetY;
+
+            // Only show if within reasonable screen bounds
+            const margin = 500;
+            const isVisible = cx > -margin && cx < w + margin && cy > -margin && cy < h + margin;
+
+            obj.sprite.setVisible(isVisible);
+            obj.sprite.setPosition(cx, cy);
+        };
+
+        this.stars.forEach(updateStar);
+        this.planets.forEach(updatePlanet);
     }
 
     private checkCollisions() {
