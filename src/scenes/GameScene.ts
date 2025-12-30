@@ -261,14 +261,14 @@ export class GameScene extends Phaser.Scene {
         this.planets = [];
         const types = ['planet_ice', 'planet_lava', 'planet_moon'];
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 2; i++) {
             const type = Phaser.Utils.Array.GetRandom(types);
             const planet = this.add.image(0, 0, type);
             const depth = Phaser.Math.FloatBetween(0.05, 0.1);
             planet.setAlpha(0.8);
             planet.setDepth(1);
 
-            const range = 4000;
+            const range = 8000;
             const wx = Phaser.Math.FloatBetween(-range, range);
             const wy = Phaser.Math.FloatBetween(-range, range);
 
