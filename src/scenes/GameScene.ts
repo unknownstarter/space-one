@@ -22,6 +22,7 @@ export class GameScene extends Phaser.Scene {
     private playerWorldPos: Phaser.Math.Vector2;
     private worldOffset: Phaser.Math.Vector2;
     private enemies: EnemyData[] = [];
+    private nickname: string = 'Pilot'; // Add nickname property
 
     private timeAlive: number = 0;
     private isGameOver: boolean = false;
@@ -61,6 +62,7 @@ export class GameScene extends Phaser.Scene {
 
     create(data: { restart: boolean, nickname?: string }) {
         console.log('GameScene: create', data.nickname);
+        if (data.nickname) this.nickname = data.nickname;
         this.cameras.main.setBackgroundColor(COLORS.BG);
 
         this.timeAlive = 0;
@@ -497,7 +499,8 @@ export class GameScene extends Phaser.Scene {
         this.scene.pause();
         this.scene.launch('GameOverScene', {
             score: this.timeAlive,
-            reviveCount: this.reviveCount
+            reviveCount: this.reviveCount,
+            nickname: this.nickname
         });
 
         // Cleanup Input

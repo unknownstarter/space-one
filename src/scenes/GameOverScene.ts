@@ -3,6 +3,7 @@ import { Button } from '../ui/Button';
 import { Storage } from '../sdk/storage';
 import { COLORS } from '../types';
 import { RevivePopup } from '../ui/RevivePopup';
+import { FirebaseAPI } from '../sdk/firebase';
 
 export class GameOverScene extends Phaser.Scene {
     private score: number = 0;
@@ -12,9 +13,12 @@ export class GameOverScene extends Phaser.Scene {
         super('GameOverScene');
     }
 
-    init(data: { score: number, reviveCount: number }) {
+    private nickname: string = 'Pilot';
+
+    init(data: { score: number, reviveCount: number, nickname: string }) {
         this.score = data.score;
         this.canContinue = data.reviveCount < 5;
+        if (data.nickname) this.nickname = data.nickname;
     }
 
     create() {
@@ -24,9 +28,12 @@ export class GameOverScene extends Phaser.Scene {
         // Overlay
         this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.85);
 
-        // Save Score
+        // Save Score (Local)
         const isNewBest = Storage.setBestScore(this.score);
         const bestScore = Storage.getBestScore();
+
+        // Save Score (Cloud)
+        FirebaseAPI.saveScore(this.nickname, this.score);
 
         // TITLE
         this.add.text(width / 2, height * 0.2, 'GAME OVER', {
