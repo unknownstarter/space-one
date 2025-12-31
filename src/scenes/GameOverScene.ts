@@ -12,9 +12,9 @@ export class GameOverScene extends Phaser.Scene {
         super('GameOverScene');
     }
 
-    init(data: { score: number, usedContinue: boolean }) {
+    init(data: { score: number, reviveCount: number }) {
         this.score = data.score;
-        this.canContinue = !data.usedContinue;
+        this.canContinue = data.reviveCount < 5;
     }
 
     create() {
@@ -69,7 +69,7 @@ export class GameOverScene extends Phaser.Scene {
             btnBg.on('pointerdown', () => this.handleContinue());
 
             const heart = this.add.text(-90, 0, '♥', { color: '#ff0000', fontSize: '24px' }).setOrigin(0.5);
-            const txt = this.add.text(10, 0, 'REVIVE (+2s)', { fontSize: '20px', color: '#fff' }).setOrigin(0.5);
+            const txt = this.add.text(10, 0, `REVIVE (+2s)`, { fontSize: '20px', color: '#fff' }).setOrigin(0.5);
 
             adContainer.add([btnBg, heart, txt]);
         } else {

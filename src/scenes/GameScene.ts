@@ -25,7 +25,7 @@ export class GameScene extends Phaser.Scene {
 
     private timeAlive: number = 0;
     private isGameOver: boolean = false;
-    private usedContinue: boolean = false;
+    private reviveCount: number = 0;
 
     private player!: Phaser.GameObjects.Image;
     private enemyGroup!: Phaser.GameObjects.Group;
@@ -65,7 +65,7 @@ export class GameScene extends Phaser.Scene {
 
         this.timeAlive = 0;
         this.isGameOver = false;
-        this.usedContinue = false;
+        this.reviveCount = 0;
         this.enemies = [];
         this.invincibilityTimer = 0;
         this.slowMoTimer = 0;
@@ -195,7 +195,7 @@ export class GameScene extends Phaser.Scene {
     private handleResume(_scene: Phaser.Scene, data: { isContinue: boolean }) {
         if (data && data.isContinue) {
             this.isGameOver = false;
-            this.usedContinue = true;
+            this.reviveCount++;
             this.invincibilityTimer = CONSTANTS.INVINCIBLE_TIME;
             this.slowMoTimer = CONSTANTS.SLOW_TIME;
 
@@ -497,7 +497,7 @@ export class GameScene extends Phaser.Scene {
         this.scene.pause();
         this.scene.launch('GameOverScene', {
             score: this.timeAlive,
-            usedContinue: this.usedContinue
+            reviveCount: this.reviveCount
         });
 
         // Cleanup Input
