@@ -40,31 +40,67 @@ export class Spawner {
         if (isFan) {
             this.spawnFan(params, enemies, playerWorldPos, spawnRadius);
         } else {
-            this.createSingleEnemy(params, enemies, playerWorldPos, spawnRadius);
+            // Radius ignored by new rect logic
+            this.createSingleEnemy(params, enemies, playerWorldPos);
         }
     }
 
     private createSingleEnemy(
         params: DifficultyParams,
         enemies: EnemyData[],
-        playerWorldPos: Phaser.Math.Vector2,
-        radius: number,
-        angleOverride?: number
+        playerWorldPos: Phaser.Math.Vector2
     ) {
         // ONLY METEORS
         const type = 'asteroid';
 
-        const angle = angleOverride ?? Phaser.Math.FloatBetween(0, Math.PI * 2);
+        // RECTANGULAR SPAWN LOGIC to solve "too far" and "uneven" issues
+        const w = this.scene.scale.width;
+        const h = this.scene.scale.height;
+        const margin = 100; // Spawn just outside screen
 
-        const offsetX = Math.cos(angle) * radius;
-        const offsetY = Math.sin(angle) * radius;
+        const rw = w + margin * 2;
+        const rh = h + margin * 2;
 
-        const worldPos = new Phaser.Math.Vector2(
-            playerWorldPos.x + offsetX,
-            playerWorldPos.y + offsetY
-        );
+        // Perimeter = 2 * (rw + rh)
+        // We pick a random distance along perimeter
+        const perimeter = 2 * (rw + rh);
+        const pVal = Math.random() * perimeter;
 
-        // TARGETING: Point exactly at player CURRENT position
+        let spawnX = 0;
+        let spawnY = 0;
+
+        if (pVal < rw) {
+            // Top Edge
+            spawnX = pVal - margin; // Shift coordinate system
+            spawnY = -margin;
+        } else if (pVal < rw + rh) {
+            // Right Edge
+            spawnX = w + margin;
+            spawnY = (pVal - rw) - margin;
+        } else if (pVal < rw + rh + rw) {
+            // Bottom Edge
+            spawnX = (rw + rh + rw - pVal) - margin; // Reverse direction
+            spawnY = h + margin;
+        } else {
+            // Left Edge
+            spawnX = -margin;
+            spawnY = (perimeter - pVal) - margin; // Reverse direction
+        }
+
+        // Relative to Camera Center (which is effectively 0,0 for logic, but Scene has camera following checks)
+        // Wait, playerWorldPos is absolute world coordinates.
+        // We need to find the Camera View bounds in World Space.
+        // The game centers the player. So Camera Center == Player World Pos.
+
+        const spawnWorldX = playerWorldPos.x + (spawnX - w / 2);
+        const spawnWorldY = playerWorldPos.y + (spawnY - h / 2);
+
+        const worldPos = new Phaser.Math.Vector2(spawnWorldX, spawnWorldY);
+
+        // TARGETING: Point exactly at player CURRENT position with slight randomization?
+        // User asked for "more narrow targeting" if it was too far. 
+        // With rectangular spawn close to player, exact targeting is fine.
+
         const dirX = playerWorldPos.x - worldPos.x;
         const dirY = playerWorldPos.y - worldPos.y;
 
@@ -79,8 +115,6 @@ export class Spawner {
         );
 
         if (type === 'asteroid') {
-            // Slight speed variance is fine, but DIRECTION must be exact.
-            // Keeping speed variance small to avoid "slow ones" lingering
             const speedVar = Phaser.Math.FloatBetween(0.9, 1.1);
             velocity.scale(speedVar);
         }

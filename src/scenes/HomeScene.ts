@@ -76,6 +76,8 @@ export class HomeScene extends Phaser.Scene {
             const nickname = input ? input.value.trim() : 'Pilot';
 
             // Show Tutorial Popup instead of starting immediately
+            if (this.domElement) this.domElement.setVisible(false);
+
             new TutorialPopup(this, () => {
                 this.scene.start('GameScene', { nickname: nickname || 'Pilot' });
             });
