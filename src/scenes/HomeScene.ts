@@ -83,10 +83,11 @@ export class HomeScene extends Phaser.Scene {
                 this.scene.start('GameScene', { nickname: nickname || 'Pilot' });
             });
 
-            // Ranking Button (Small, below Start)
-            new Button(this, cx, cy + (isMobile ? 140 : 170), 'RANKING', () => {
-                new RankingPopup(this, () => { });
-            });
+        });
+
+        // Ranking Button (Small, below Start)
+        new Button(this, cx, cy + (isMobile ? 140 : 170), 'RANKING', () => {
+            new RankingPopup(this, () => { });
         });
 
         // Instructions
