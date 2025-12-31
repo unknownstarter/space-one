@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import { COLORS } from '../types';
 import { Button } from '../ui/Button';
+import { TutorialPopup } from '../ui/TutorialPopup';
+
 
 interface BackgroundObj {
     sprite: Phaser.GameObjects.Image;
@@ -72,7 +74,11 @@ export class HomeScene extends Phaser.Scene {
         this.startButton = new Button(this, cx, cy + (isMobile ? 80 : 100), 'Game Start', () => {
             const input = this.domElement.getChildByName('nickname') as HTMLInputElement;
             const nickname = input ? input.value.trim() : 'Pilot';
-            this.scene.start('GameScene', { nickname: nickname || 'Pilot' });
+
+            // Show Tutorial Popup instead of starting immediately
+            new TutorialPopup(this, () => {
+                this.scene.start('GameScene', { nickname: nickname || 'Pilot' });
+            });
         });
 
         // Instructions

@@ -15,6 +15,8 @@ export class BootScene extends Phaser.Scene {
         this.createStarTexture();
         this.createParticleTexture();
         this.createPlanetTextures(); // New
+        this.load.image('tutorial_joystick', 'assets/tutorial_joystick.png');
+
         console.log('BootScene: textures generated');
     }
 
