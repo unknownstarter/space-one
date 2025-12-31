@@ -87,7 +87,10 @@ export class HomeScene extends Phaser.Scene {
 
         // Ranking Button (Small, below Start)
         new Button(this, cx, cy + (isMobile ? 140 : 170), 'RANKING', () => {
-            new RankingPopup(this, () => { });
+            if (this.domElement) this.domElement.setVisible(false);
+            new RankingPopup(this, () => {
+                if (this.domElement) this.domElement.setVisible(true);
+            });
         });
 
         // Instructions
