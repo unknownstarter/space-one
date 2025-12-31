@@ -94,7 +94,11 @@ export class HomeScene extends Phaser.Scene {
         const footerY = this.scale.height - 30;
         const footerStyle = { fontSize: '12px', color: '#666666' };
 
-        const copyright = this.add.text(cx, footerY - 20, '© 2025 Dropdown', footerStyle).setOrigin(0.5);
+        const copyright = this.add.text(cx, footerY - 20, '© 2025 Dropdown', footerStyle)
+            .setOrigin(0.5)
+            .setInteractive({ useHandCursor: true });
+
+        copyright.on('pointerdown', () => window.open('https://www.dropdown.xyz/', '_blank'));
 
         const privacy = this.add.text(cx - 80, footerY, 'Privacy Policy', footerStyle)
             .setOrigin(0.5)
