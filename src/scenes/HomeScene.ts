@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { COLORS } from '../types';
 import { Button } from '../ui/Button';
 import { TutorialPopup } from '../ui/TutorialPopup';
+import { RankingPopup } from '../ui/RankingPopup';
 
 
 interface BackgroundObj {
@@ -80,6 +81,11 @@ export class HomeScene extends Phaser.Scene {
 
             new TutorialPopup(this, () => {
                 this.scene.start('GameScene', { nickname: nickname || 'Pilot' });
+            });
+
+            // Ranking Button (Small, below Start)
+            new Button(this, cx, cy + (isMobile ? 140 : 170), 'RANKING', () => {
+                new RankingPopup(this, () => { });
             });
         });
 

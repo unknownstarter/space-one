@@ -4,6 +4,7 @@ import { Storage } from '../sdk/storage';
 import { COLORS } from '../types';
 import { RevivePopup } from '../ui/RevivePopup';
 import { FirebaseAPI } from '../sdk/firebase';
+import { RankingPopup } from '../ui/RankingPopup';
 
 export class GameOverScene extends Phaser.Scene {
     private score: number = 0;
@@ -63,6 +64,11 @@ export class GameOverScene extends Phaser.Scene {
         // REPLAY (Big)
         new Button(this, width / 2, currentY, 'REPLAY', () => {
             this.scene.start('GameScene', { restart: true });
+        });
+
+        // RANKING (Small)
+        new Button(this, width / 2, currentY + 160, 'RANKING', () => {
+            new RankingPopup(this, () => { });
         });
 
         // CONTINUE (Ad)
