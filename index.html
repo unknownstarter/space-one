@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Space Survival</title>
+  <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
 
   <!-- Open Graph Data -->
   <meta property="og:title" content="Space One!" />
@@ -13,14 +14,16 @@
   <meta property="og:image" content="/og-image.jpg" />
   <meta property="og:type" content="website" />
 
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1886599828759613" crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1886599828759613"
+    crossorigin="anonymous"></script>
   <style>
     body {
       margin: 0;
       padding: 0;
       background-color: #000;
       overflow: hidden;
-      touch-action: none; /* Prevent browser zooming/scrolling */
+      touch-action: none;
+      /* Prevent browser zooming/scrolling */
     }
 
     #app {
@@ -29,15 +32,16 @@
     }
 
     #ad-banner-bottom {
-        position: fixed;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 320px;
-        height: 50px;
-        background-color: transparent;
-        z-index: 9999;
-        pointer-events: none; /* Let clicks pass through if empty */
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+      height: 50px;
+      background-color: transparent;
+      z-index: 9999;
+      pointer-events: none;
+      /* Let clicks pass through if empty */
     }
   </style>
 </head>
@@ -45,7 +49,7 @@
 <body>
   <div id="app"></div>
   <div id="ad-banner-bottom">
-      <!-- AdSense Unit will be injected here later -->
+    <!-- AdSense Unit will be injected here later -->
   </div>
   <script type="module" src="/src/main.ts"></script>
 </body>
