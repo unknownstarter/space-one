@@ -129,6 +129,11 @@ export class GameScene extends Phaser.Scene {
 
         this.scale.on('resize', this.handleResize, this);
         this.events.on('resume', this.handleResume, this);
+        this.events.once('shutdown', this.cleanup, this);
+    }
+
+    private cleanup() {
+        this.scale.off('resize', this.handleResize, this);
     }
 
     private setupInput() {

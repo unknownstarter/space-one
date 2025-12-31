@@ -20,7 +20,7 @@ export class HomeScene extends Phaser.Scene {
     private startButton!: Button;
     private rankingButton!: Button;
     private instructionsText!: Phaser.GameObjects.Text;
-    
+
     // Footer Links
     private copyright!: Phaser.GameObjects.Text;
     private privacy!: Phaser.GameObjects.Text;
@@ -45,6 +45,11 @@ export class HomeScene extends Phaser.Scene {
         this.handleResize(this.scale.gameSize);
 
         this.scale.on('resize', this.handleResize, this);
+        this.events.once('shutdown', this.cleanup, this);
+    }
+
+    private cleanup() {
+        this.scale.off('resize', this.handleResize, this);
     }
 
     private createUIElements() {
@@ -167,7 +172,7 @@ export class HomeScene extends Phaser.Scene {
 
             // Simple wrapping logic might differ from create logic slightly, 
             // but the keys are consistent.
-            
+
             obj.sprite.y = (this.scale.height / 2) + obj.worldPos.y;
             obj.sprite.x = (this.scale.width / 2) + obj.worldPos.x;
         };
