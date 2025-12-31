@@ -15,11 +15,13 @@ export class GameOverScene extends Phaser.Scene {
     }
 
     private nickname: string = 'Pilot';
+    private sessionId: string = '';
 
-    init(data: { score: number, reviveCount: number, nickname: string }) {
+    init(data: { score: number, reviveCount: number, nickname: string, sessionId: string }) {
         this.score = data.score;
         this.canContinue = data.reviveCount < 5;
         if (data.nickname) this.nickname = data.nickname;
+        if (data.sessionId) this.sessionId = data.sessionId;
     }
 
     create() {
@@ -34,7 +36,8 @@ export class GameOverScene extends Phaser.Scene {
         const bestScore = Storage.getBestScore();
 
         // Save Score (Cloud)
-        FirebaseAPI.saveScore(this.nickname, this.score);
+        const sid = this.sessionId || Date.now().toString(); // Fallback
+        FirebaseAPI.saveScore(this.nickname, this.score, sid);
 
         // TITLE
         this.add.text(width / 2, height * 0.2, 'GAME OVER', {

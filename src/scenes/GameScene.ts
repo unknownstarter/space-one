@@ -22,7 +22,8 @@ export class GameScene extends Phaser.Scene {
     private playerWorldPos: Phaser.Math.Vector2;
     private worldOffset: Phaser.Math.Vector2;
     private enemies: EnemyData[] = [];
-    private nickname: string = 'Pilot'; // Add nickname property
+    private nickname: string = 'Pilot';
+    private sessionId: string = '';
 
     private timeAlive: number = 0;
     private isGameOver: boolean = false;
@@ -69,6 +70,11 @@ export class GameScene extends Phaser.Scene {
         this.isGameOver = false;
         this.reviveCount = 0;
         this.enemies = [];
+        // Generate a simple unique session ID (timestamp + random) or reuse existing if just restarting? 
+        // Actually, if restarting, it's a NEW game, so new ID.
+        // If resuming (Revive), we keep the same ID (this method isn't called on resume).
+        this.sessionId = Date.now().toString() + Math.random().toString(36).substr(2, 9);
+
         this.invincibilityTimer = 0;
         this.slowMoTimer = 0;
         this.playerWorldPos.set(0, 0);
@@ -500,7 +506,8 @@ export class GameScene extends Phaser.Scene {
         this.scene.launch('GameOverScene', {
             score: this.timeAlive,
             reviveCount: this.reviveCount,
-            nickname: this.nickname
+            nickname: this.nickname,
+            sessionId: this.sessionId
         });
 
         // Cleanup Input

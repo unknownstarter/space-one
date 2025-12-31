@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs } from "firebase/firestore";
+import { getFirestore, collection, setDoc, doc, query, orderBy, limit, getDocs } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -31,16 +31,16 @@ export const FirebaseAPI = {
      * @param nickname Player's nickname
      * @param score Time survived in seconds
      */
-    async saveScore(nickname: string, score: number) {
+    async saveScore(nickname: string, score: number, sessionId: string) {
         try {
-            await addDoc(collection(db, COLLECTION_NAME), {
+            await setDoc(doc(db, COLLECTION_NAME, sessionId), {
                 nickname,
                 score,
                 timestamp: Date.now()
             });
-            console.log("Score saved to Firebase");
+            console.log("Score saved/updated to Firebase");
         } catch (e) {
-            console.error("Error adding document: ", e);
+            console.error("Error writing document: ", e);
         }
     },
 
