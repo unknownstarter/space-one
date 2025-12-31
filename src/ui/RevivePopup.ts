@@ -61,10 +61,11 @@ export class RevivePopup extends Phaser.GameObjects.Container {
 
         // 6. Confirm / Reward Button
         // Simulating the "Reward Granted" event or manual user confirmation
-        new Button(scene, width / 2, height / 2 + 200, 'GET REWARD', () => {
+        const btn = new Button(scene, width / 2, height / 2 + 200, 'GET REWARD', () => {
             this.destroy(); // Destroy self
             onClose(); // Callback
         });
+        this.add(btn);
     }
 
     destroy(fromScene?: boolean) {
