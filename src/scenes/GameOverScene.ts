@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 import { Button } from '../ui/Button';
 import { Storage } from '../sdk/storage';
-import { Ads } from '../sdk/ads';
 import { COLORS } from '../types';
+import { RevivePopup } from '../ui/RevivePopup';
 
 export class GameOverScene extends Phaser.Scene {
     private score: number = 0;
@@ -89,10 +89,11 @@ export class GameOverScene extends Phaser.Scene {
     }
 
     async handleContinue() {
-        const success = await Ads.showRewardedAd();
-        if (success) {
+        // Open the Revive Popup with Ad
+        new RevivePopup(this, () => {
+            // Callback when "Reward" is clicked
             this.scene.resume('GameScene', { isContinue: true });
             this.scene.stop();
-        }
+        });
     }
 }
