@@ -85,10 +85,27 @@ export class HomeScene extends Phaser.Scene {
 
         // Instructions
         if (this.instructionsText) this.instructionsText.destroy();
-        this.instructionsText = this.add.text(cx, this.scale.height - (isMobile ? 30 : 50), isMobile ? 'Tap / Drag to Move' : 'Use ARROW KEYS', {
+        this.instructionsText = this.add.text(cx, this.scale.height - (isMobile ? 120 : 150), isMobile ? 'Tap / Drag to Move' : 'Use ARROW KEYS', {
             fontSize: isMobile ? '14px' : '18px',
             color: '#aaaaaa'
         }).setOrigin(0.5);
+
+        // FOOTER (Copyright & Links)
+        const footerY = this.scale.height - 30;
+        const footerStyle = { fontSize: '12px', color: '#666666' };
+
+        const copyright = this.add.text(cx, footerY - 20, '© 2025 Dropdown', footerStyle).setOrigin(0.5);
+
+        const privacy = this.add.text(cx - 80, footerY, 'Privacy Policy', footerStyle)
+            .setOrigin(0.5)
+            .setInteractive({ useHandCursor: true });
+
+        const terms = this.add.text(cx + 80, footerY, 'Terms of Service', footerStyle)
+            .setOrigin(0.5)
+            .setInteractive({ useHandCursor: true });
+
+        privacy.on('pointerdown', () => window.open('https://whatisgoingon.notion.site/Privacy-Policy-2da8cdd3705380b7b730e3ff224156cd?source=copy_link', '_blank'));
+        terms.on('pointerdown', () => window.open('https://whatisgoingon.notion.site/Terms-of-Service-2da8cdd3705380dbb484d46d09ba83d9?source=copy_link', '_blank'));
     }
 
     update(_time: number, delta: number) {
