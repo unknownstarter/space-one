@@ -193,27 +193,73 @@ export class HomeScene extends Phaser.Scene {
         const rankBtnY = startBtnY + (isMobile ? 60 : 70);
         this.rankingButton.setPosition(cx, rankBtnY);
 
-        // Footer
+        // Layout Strategy for Bottom Elements:
+        // 1. Text Instructions (Move closer to buttons)
+        // 2. Lore Box (Above footer)
+        // 3. Footer (Bottom)
+
+        // Instructions - Position below Ranking Button
+        let instructionsY = rankBtnY + 40;
+        this.instructionsText.setText(isMobile ? 'Tap / Drag to Move' : 'Use ARROW KEYS');
+        this.instructionsText.setFontSize(isMobile ? 14 : 18);
+        this.instructionsText.setPosition(cx, instructionsY);
+
+        // Footer - Always at bottom
         const footerY = h - 30;
         this.copyright.setPosition(cx, footerY - 20);
         this.privacy.setPosition(cx - 80, footerY);
-        this.terms.setPosition(cx + 80, footerY);
+        this.terms.setPosition(cx + 80, footerY); // Spread out more?
+        // Let's adjust footer spread on mobile vs desktop?
+        // Current: -80 and +80. If width is small, might overlap?
+        // 80px * 2 = 160px width. Mobile is 320px+. Should be fine.
 
-        // Resize & Position Lore Box
+        // Lore Box Position
+        // Must be ABOVE footer, but BELOW instructions.
         const loreBox = this.children.getByName('loreBox') as Phaser.GameObjects.Container;
         if (loreBox) {
-            let loreY = footerY - 80;
-            if (loreY < rankBtnY + 40) {
-                loreY = rankBtnY + 40; // Push it down if needed, or might overlap footer
+            // Target Y: Above footer with padding
+            const targetLoreY = footerY - 80;
+
+            // Check collision with instructions
+            // Instructions are at `instructionsY`. Text height ~20px.
+            // If `targetLoreY` is too close to `instructionsY + 20`, we have an issue.
+            // Let's ensure at least 30px gap.
+            const minLoreY = instructionsY + 40;
+
+            let finalLoreY = targetLoreY;
+            if (targetLoreY < minLoreY) {
+                // If we are crunched, we need to prioritize.
+                // 1. Lore Box is mandatory (AdSense).
+                // 2. Instructions are nice to have.
+                // If it's REALLY tight, hide instructions.
+                if (h < 550) { // Extremely short screen
+                    this.instructionsText.setVisible(false);
+                    // Move Lore box up slightly if allowed, or keep target.
+                } else {
+                    // Try to fit both by pushing Lore Box down? No, footer is there.
+                    // Maybe move Instructions UP? They are already tight to buttons.
+                    // Let's hide instructions if we overlap significantly.
+                    if (targetLoreY < instructionsY + 20) {
+                        this.instructionsText.setVisible(false);
+                    } else {
+                        this.instructionsText.setVisible(true);
+                    }
+                }
+            } else {
+                this.instructionsText.setVisible(true);
             }
-            loreBox.setPosition(cx, loreY);
+
+            loreBox.setPosition(cx, finalLoreY);
 
             const bg = loreBox.getByName('bg') as Phaser.GameObjects.Rectangle;
             const text = loreBox.getByName('text') as Phaser.GameObjects.Text;
 
-            // Responsive Width
+            // Responsive Width & Height
             const boxWidth = Math.min(400, gameSize.width * 0.9);
-            const boxHeight = isMobile ? 60 : 40; // More height for wrapping
+            // Dynamic height based on wrapped text? 
+            // Hard to calculate exact wrapped height in Phaser easily without pre-calc.
+            // But we can estimate. 60px is usually enough for 2 lines.
+            const boxHeight = isMobile ? 60 : 40;
 
             if (bg) {
                 bg.setSize(boxWidth, boxHeight);
@@ -221,16 +267,6 @@ export class HomeScene extends Phaser.Scene {
             if (text) {
                 text.setWordWrapWidth(boxWidth - 20);
             }
-        }
-
-        // Instructions
-        if (isVerySmallHeight) {
-            this.instructionsText.setVisible(false);
-        } else {
-            this.instructionsText.setVisible(true);
-            this.instructionsText.setText(isMobile ? 'Tap / Drag to Move' : 'Use ARROW KEYS');
-            this.instructionsText.setFontSize(isMobile ? 14 : 18);
-            this.instructionsText.setPosition(cx, h - (isMobile ? 120 : 150));
         }
     }
 
