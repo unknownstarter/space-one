@@ -136,11 +136,15 @@ export class HomeScene extends Phaser.Scene {
 
         // Background for text visibility
         const bg = this.add.rectangle(0, 0, 400, 40, 0x000000, 0.6).setStrokeStyle(1, 0x00ffff);
+        bg.setName('bg'); // Allow access in resize
+
         const text = this.add.text(0, 0, randomTip, {
             fontSize: '14px',
             color: '#00ffff',
-            fontFamily: 'monospace'
+            fontFamily: 'monospace',
+            align: 'center'
         }).setOrigin(0.5);
+        text.setName('text'); // Allow access in resize
 
         tipBox.add([bg, text]);
 
@@ -155,15 +159,25 @@ export class HomeScene extends Phaser.Scene {
 
         const cx = gameSize.width / 2;
         const cy = gameSize.height / 2;
-        const isMobile = gameSize.width < 600;
+        const h = gameSize.height;
+        const isMobile = gameSize.width < 600 || gameSize.height < 700;
+        const isVerySmallHeight = gameSize.height < 600;
 
         // Title
+        const titleY = isVerySmallHeight ? h * 0.15 : cy - 200;
         const fontSizeVal = isMobile ? Math.max(32, gameSize.width * 0.1) : 64;
         this.titleText.setFontSize(fontSizeVal);
-        this.titleText.setPosition(cx, cy - (isMobile ? 120 : 200));
+        this.titleText.setPosition(cx, titleY);
+
+        // Center Group (Input, Buttons)
+        let centerGroupY = cy;
+        if (isVerySmallHeight) {
+            centerGroupY = h * 0.45;
+        }
 
         // Input
-        this.domElement.setPosition(cx, cy - (isMobile ? 20 : 50));
+        const inputY = centerGroupY - (isMobile ? 20 : 50);
+        this.domElement.setPosition(cx, inputY);
         const input = this.domElement.getChildByName('nickname') as HTMLInputElement;
         if (input) {
             const inputWidth = isMobile ? Math.min(250, gameSize.width * 0.8) : 250;
@@ -173,25 +187,50 @@ export class HomeScene extends Phaser.Scene {
         }
 
         // Buttons
-        this.startButton.setPosition(cx, cy + (isMobile ? 80 : 100));
-        this.rankingButton.setPosition(cx, cy + (isMobile ? 140 : 170));
+        const startBtnY = inputY + (isMobile ? 60 : 80);
+        this.startButton.setPosition(cx, startBtnY);
 
-        // Instructions
-        this.instructionsText.setText(isMobile ? 'Tap / Drag to Move' : 'Use ARROW KEYS');
-        this.instructionsText.setFontSize(isMobile ? 14 : 18);
-        this.instructionsText.setPosition(cx, gameSize.height - (isMobile ? 120 : 150));
+        const rankBtnY = startBtnY + (isMobile ? 60 : 70);
+        this.rankingButton.setPosition(cx, rankBtnY);
 
         // Footer
-        const footerY = gameSize.height - 30;
+        const footerY = h - 30;
         this.copyright.setPosition(cx, footerY - 20);
         this.privacy.setPosition(cx - 80, footerY);
         this.terms.setPosition(cx + 80, footerY);
 
-        // Resize Lore Box
+        // Resize & Position Lore Box
         const loreBox = this.children.getByName('loreBox') as Phaser.GameObjects.Container;
         if (loreBox) {
-            loreBox.setPosition(cx, footerY - 80); // Above footer
-            // Optional: Scale down on mobile if needed
+            let loreY = footerY - 80;
+            if (loreY < rankBtnY + 40) {
+                loreY = rankBtnY + 40; // Push it down if needed, or might overlap footer
+            }
+            loreBox.setPosition(cx, loreY);
+
+            const bg = loreBox.getByName('bg') as Phaser.GameObjects.Rectangle;
+            const text = loreBox.getByName('text') as Phaser.GameObjects.Text;
+
+            // Responsive Width
+            const boxWidth = Math.min(400, gameSize.width * 0.9);
+            const boxHeight = isMobile ? 60 : 40; // More height for wrapping
+
+            if (bg) {
+                bg.setSize(boxWidth, boxHeight);
+            }
+            if (text) {
+                text.setWordWrapWidth(boxWidth - 20);
+            }
+        }
+
+        // Instructions
+        if (isVerySmallHeight) {
+            this.instructionsText.setVisible(false);
+        } else {
+            this.instructionsText.setVisible(true);
+            this.instructionsText.setText(isMobile ? 'Tap / Drag to Move' : 'Use ARROW KEYS');
+            this.instructionsText.setFontSize(isMobile ? 14 : 18);
+            this.instructionsText.setPosition(cx, h - (isMobile ? 120 : 150));
         }
     }
 
