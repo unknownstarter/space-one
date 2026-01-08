@@ -116,13 +116,13 @@ export class HomeScene extends Phaser.Scene {
         this.terms.on('pointerdown', () => window.open('https://whatisgoingon.notion.site/Terms-of-Service-2da8cdd3705380dbb484d46d09ba83d9?source=copy_link', '_blank'));
 
         // 7. Lore / Tips Section (Policy Compliance Content)
-        this.createLoreSection(cx, cy);
+        this.createLoreSection(cx);
 
         // 8. Enable Banner (Now safe due to Lore content)
         AdManager.showBanner('3614039774');
     }
 
-    private createLoreSection(cx: number, cy: number) {
+    private createLoreSection(cx: number) {
         const tips = [
             "TIP: Moving continuously makes you harder to hit.",
             "LORE: The sector 7G quarantine has been lifted... for now.",

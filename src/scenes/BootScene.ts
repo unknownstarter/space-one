@@ -40,7 +40,7 @@ export class BootScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // Progress Bar (Fake or Real)
-        const barBg = this.add.rectangle(cx, cy, 200, 4, 0x333333);
+        this.add.rectangle(cx, cy, 200, 4, 0x333333);
         const bar = this.add.rectangle(cx - 100, cy, 0, 4, 0x00ffff).setOrigin(0, 0.5);
 
         // Hook into Loader
