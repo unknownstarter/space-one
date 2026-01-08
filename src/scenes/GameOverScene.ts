@@ -5,6 +5,7 @@ import { COLORS } from '../types';
 import { RevivePopup } from '../ui/RevivePopup';
 import { FirebaseAPI } from '../sdk/firebase';
 import { RankingPopup } from '../ui/RankingPopup';
+import { AdManager } from '../sdk/AdManager';
 
 export class GameOverScene extends Phaser.Scene {
     private score: number = 0;
@@ -66,6 +67,7 @@ export class GameOverScene extends Phaser.Scene {
 
         // REPLAY (Big)
         new Button(this, width / 2, currentY, 'REPLAY', () => {
+            AdManager.hideBanner();
             this.scene.start('GameScene', { restart: true });
         });
 
@@ -100,14 +102,21 @@ export class GameOverScene extends Phaser.Scene {
         }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
         homeText.on('pointerdown', () => {
+            // Hide Ad before leaving
+            AdManager.hideBanner();
             location.reload();
         });
+
+        // SHOW AD Banner (Safe because we have content on this screen)
+        // User needs to put real slot ID here
+        AdManager.showBanner('3614039774');
     }
 
     async handleContinue() {
         // Open the Revive Popup with Ad
         new RevivePopup(this, () => {
             // Callback when "Reward" is clicked
+            AdManager.hideBanner();
             this.scene.resume('GameScene', { isContinue: true });
             this.scene.stop();
         });

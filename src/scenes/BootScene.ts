@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { COLORS } from '../types';
+import { AdManager } from '../sdk/AdManager';
 
 export class BootScene extends Phaser.Scene {
     constructor() {
@@ -8,6 +9,44 @@ export class BootScene extends Phaser.Scene {
 
     preload() {
         console.log('BootScene: preload started');
+
+        // SHOW AD (Safe because we are adding content below)
+        AdManager.showBanner('3614039774');
+
+        const width = this.scale.width;
+        const height = this.scale.height;
+        const cx = width / 2;
+        const cy = height / 2;
+
+        // Visual Loading Content (Policy Compliance)
+        this.add.text(cx, cy - 50, 'LOADING SYSTEM...', {
+            fontSize: '24px',
+            color: '#00ffff',
+            fontFamily: 'monospace'
+        }).setOrigin(0.5);
+
+        const tips = [
+            "TIP: The Universe is infinite... unfortunately so are the enemies.",
+            "TIP: Use your shield wisely.",
+            "TIP: Hitting planets is fatal.",
+            "LORE: System check... Engines... Online."
+        ];
+        const randomTip = Phaser.Utils.Array.GetRandom(tips);
+
+        this.add.text(cx, cy + 20, randomTip, {
+            fontSize: '14px',
+            color: '#aaaaaa',
+            fontFamily: 'monospace'
+        }).setOrigin(0.5);
+
+        // Progress Bar (Fake or Real)
+        const barBg = this.add.rectangle(cx, cy, 200, 4, 0x333333);
+        const bar = this.add.rectangle(cx - 100, cy, 0, 4, 0x00ffff).setOrigin(0, 0.5);
+
+        // Hook into Loader
+        this.load.on('progress', (value: number) => {
+            bar.width = 200 * value;
+        });
 
         this.createShipTexture();
         this.createMissileTexture();

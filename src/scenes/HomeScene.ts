@@ -3,6 +3,7 @@ import { COLORS } from '../types';
 import { Button } from '../ui/Button';
 import { TutorialPopup } from '../ui/TutorialPopup';
 import { RankingPopup } from '../ui/RankingPopup';
+import { AdManager } from '../sdk/AdManager';
 
 interface BackgroundObj {
     sprite: Phaser.GameObjects.Image;
@@ -113,6 +114,40 @@ export class HomeScene extends Phaser.Scene {
             .setOrigin(0.5)
             .setInteractive({ useHandCursor: true });
         this.terms.on('pointerdown', () => window.open('https://whatisgoingon.notion.site/Terms-of-Service-2da8cdd3705380dbb484d46d09ba83d9?source=copy_link', '_blank'));
+
+        // 7. Lore / Tips Section (Policy Compliance Content)
+        this.createLoreSection(cx, cy);
+
+        // 8. Enable Banner (Now safe due to Lore content)
+        AdManager.showBanner('3614039774');
+    }
+
+    private createLoreSection(cx: number, cy: number) {
+        const tips = [
+            "TIP: Moving continuously makes you harder to hit.",
+            "LORE: The sector 7G quarantine has been lifted... for now.",
+            "TIP: Red missiles track your heat signature. Sharp turns help.",
+            "LORE: You are piloting the last MK-IV Interceptor.",
+            "TIP: Collect hearts to repair hull damage instantly."
+        ];
+        const randomTip = Phaser.Utils.Array.GetRandom(tips);
+
+        const tipBox = this.add.container(cx, this.scale.height - 100);
+
+        // Background for text visibility
+        const bg = this.add.rectangle(0, 0, 400, 40, 0x000000, 0.6).setStrokeStyle(1, 0x00ffff);
+        const text = this.add.text(0, 0, randomTip, {
+            fontSize: '14px',
+            color: '#00ffff',
+            fontFamily: 'monospace'
+        }).setOrigin(0.5);
+
+        tipBox.add([bg, text]);
+
+        // Assign to a class property if we need to resize it later, 
+        // but for now just adding it to the scene is enough.
+        // We'll give it a name to find it in resize if needed.
+        tipBox.setName('loreBox');
     }
 
     private handleResize(gameSize: Phaser.Structs.Size) {
@@ -151,6 +186,13 @@ export class HomeScene extends Phaser.Scene {
         this.copyright.setPosition(cx, footerY - 20);
         this.privacy.setPosition(cx - 80, footerY);
         this.terms.setPosition(cx + 80, footerY);
+
+        // Resize Lore Box
+        const loreBox = this.children.getByName('loreBox') as Phaser.GameObjects.Container;
+        if (loreBox) {
+            loreBox.setPosition(cx, footerY - 80); // Above footer
+            // Optional: Scale down on mobile if needed
+        }
     }
 
     update(_time: number, delta: number) {

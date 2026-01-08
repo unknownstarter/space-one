@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { Button } from './Button';
+import { AdManager } from '../sdk/AdManager';
 
 export class RevivePopup extends Phaser.GameObjects.Container {
     private domElement: Phaser.GameObjects.DOMElement;
@@ -32,21 +33,9 @@ export class RevivePopup extends Phaser.GameObjects.Container {
         this.add(title);
 
         // 4. Ad Container (DOM)
-        // We insert a responsive ad unit here
-        const adWidth = 300;
-        const adHeight = 250;
-
-        // Note: In a real scenario, you'd paste your AdSense code into the innerHTML
-        // For compliance, we use a placeholder styling that looks like an ad slot
-        const adHTML = `
-            <div style="width: ${adWidth}px; height: ${adHeight}px; background-color: #eee; display: flex; align-items: center; justify-content: center; color: #333; font-family: sans-serif; font-size: 14px; border: 1px solid #ccc;">
-                <div style="text-align: center;">
-                    <p style="margin: 0; font-weight: bold;">AdSense Block</p>
-                    <p style="font-size: 10px; margin-top: 5px;">(Ad will appear here)</p>
-                     <!-- Paste actual AdSense <ins> tag here eventually -->
-                </div>
-            </div>
-        `;
+        // We insert a large ad unit here via AdManager
+        // User must put RECTANGULAR slot ID here
+        const adHTML = AdManager.getReviveAdHtml('5878909333');
 
         this.domElement = scene.add.dom(width / 2, height / 2 - 50).createFromHTML(adHTML);
         this.domElement.setOrigin(0.5);
