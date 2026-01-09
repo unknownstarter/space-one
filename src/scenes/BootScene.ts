@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { COLORS } from '../types';
-import { AdManager } from '../sdk/AdManager';
+// import { AdManager } from '../sdk/AdManager';
 
 export class BootScene extends Phaser.Scene {
     constructor() {
@@ -10,8 +10,8 @@ export class BootScene extends Phaser.Scene {
     preload() {
         console.log('BootScene: preload started');
 
-        // SHOW AD (Safe because we are adding content below)
-        AdManager.showBanner('3614039774');
+        // CHECK: Ad removed for policy compliance
+        // AdManager.showBanner('3614039774');
 
         const width = this.scale.width;
         const height = this.scale.height;
