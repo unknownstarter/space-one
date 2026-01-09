@@ -43,15 +43,111 @@
       z-index: 9999;
       pointer-events: none;
     } */
+
+    #game-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      max-height: 20%;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.8);
+      color: #888;
+      font-family: monospace;
+      padding: 10px;
+      box-sizing: border-box;
+      z-index: 10;
+      /* Visible above background but maybe below some UI? */
+      display: none;
+      /* Intitially hidden, but we might need it for bots? */
+    }
+
+    /* Make it visible for bots/crawlers but unobtrusive for players */
+    /* Strategy: A "Read More" or just visible text at bottom */
+    #game-info {
+      display: block;
+      opacity: 0.8;
+      pointer-events: none;
+      /* Click through to game if needed, though bottom is footer */
+      font-size: 10px;
+      text-align: center;
+      border-top: 1px solid #333;
+    }
+
+    #game-info h1,
+    #game-info h2 {
+      font-size: 12px;
+      color: #aaa;
+      margin: 2px 0;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    #game-info p,
+    #game-info ul {
+      margin: 2px 0;
+      display: inline;
+    }
+
+    #game-info li {
+      display: inline;
+      margin-right: 5px;
+    }
+
+    #game-info footer {
+      display: none;
+      /* Hide footer dup */
+    }
+
+    @media (max-width: 600px) {
+
+      /* On mobile, keep it minimal */
+      #game-info {
+        height: 40px;
+        max-height: 40px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        opacity: 0.5;
+      }
+    }
   </style>
   <script type="module" crossorigin src="./assets/index-DC91GTbq.js"></script>
 </head>
 
-<body>
-  <div id="app"></div>
-  <!-- <div id="ad-banner-bottom"> -->
-    <!-- AdSense Unit will be injected here later -->
-  <!-- </div> -->
+<div id="game-info">
+  <h1>Space One: Interstellar Survival</h1>
+  <p>
+    Welcome to <strong>Space One</strong>, an infinite arcade space survival game.
+    Pilot the last <em>MK-IV Interceptor</em> through the quarantine sector.
+  </p>
+
+  <section>
+    <h2>Game Instructions</h2>
+    <ul>
+      <li><strong>Move:</strong> Use Arrow Keys (Desktop) or Drag Joystick (Mobile) to navigate.</li>
+      <li><strong>Dodge:</strong> Avoid colliding with asteroids and planets.</li>
+      <li><strong>Survive:</strong> Red missiles track your heat signature. Make sharp turns to evade them.</li>
+      <li><strong>Repair:</strong> Collect hearts to repair hull damage.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Lore</h2>
+    <p>
+      The Universe is infinite... unfortunately so are the enemies.
+      Sector 7G quarantine has been lifted. Engines are online.
+      How long can you survive the void?
+    </p>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Dropdown. All rights reserved.</p>
+  </footer>
+</div>
+
+<div id="app"></div>
+
 </body>
 
 </html>
