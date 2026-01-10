@@ -144,16 +144,32 @@
     }
 
     /* Visually Hidden Content for Crawler (Applies globally) */
+    /* NUCLEAR OPTION: Ensure this is absolutely hidden from the visual UI */
     #game-info .content-hidden {
       position: absolute;
+      left: -9999px;
+      top: -9999px;
       width: 1px;
       height: 1px;
       padding: 0;
-      margin: -1px;
+      margin: 0;
       overflow: hidden;
       clip: rect(0, 0, 0, 0);
+      /* Fallback */
+      clip-path: inset(50%);
+      /* Modern */
       white-space: nowrap;
       border: 0;
+      opacity: 0;
+      /* Make it invisible */
+      pointer-events: none;
+      /* No interaction */
+      visibility: hidden;
+      /* Hides from screen readers too, but Google Bot parses DOM. Safe? */
+      /* Actually, 'visibility: hidden' might be skipped by some bots as 'not on page'. 
+         Let's stick to the off-screen + opacity + clip method which is standard 'sr-only'.
+      */
+      visibility: visible;
     }
 
     @media (max-width: 600px) {
