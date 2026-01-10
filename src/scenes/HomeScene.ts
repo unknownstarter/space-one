@@ -3,6 +3,7 @@ import { COLORS } from '../types';
 import { Button } from '../ui/Button';
 import { TutorialPopup } from '../ui/TutorialPopup';
 import { RankingPopup } from '../ui/RankingPopup';
+import { Analytics } from '../sdk/analytics';
 // import { AdManager } from '../sdk/AdManager';
 
 interface BackgroundObj {
@@ -81,6 +82,7 @@ export class HomeScene extends Phaser.Scene {
 
             if (this.domElement) this.domElement.setVisible(false);
             new TutorialPopup(this, () => {
+                Analytics.logEvent('game_start', { nickname: nickname || 'Pilot' });
                 this.scene.start('GameScene', { nickname: nickname || 'Pilot' });
             });
         });

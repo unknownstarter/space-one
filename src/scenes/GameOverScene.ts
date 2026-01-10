@@ -5,6 +5,7 @@ import { COLORS } from '../types';
 import { RevivePopup } from '../ui/RevivePopup';
 import { FirebaseAPI } from '../sdk/firebase';
 import { RankingPopup } from '../ui/RankingPopup';
+import { Analytics } from '../sdk/analytics';
 // import { AdManager } from '../sdk/AdManager';
 
 export class GameOverScene extends Phaser.Scene {
@@ -39,6 +40,7 @@ export class GameOverScene extends Phaser.Scene {
         // Save Score (Cloud)
         const sid = this.sessionId || Date.now().toString(); // Fallback
         FirebaseAPI.saveScore(this.nickname, this.score, sid);
+        Analytics.logEvent('game_over', { score: this.score, bestScore });
 
         // TITLE
         this.add.text(width / 2, height * 0.15, 'GAME OVER', {
