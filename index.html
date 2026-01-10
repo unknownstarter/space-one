@@ -102,47 +102,100 @@
     @media (max-width: 600px) {
 
       /* On mobile, keep it minimal */
+      /* Mobile-First Footer Styling */
+      /* This replaces the Canvas footer and provides AdSense content */
       #game-info {
-        height: 40px;
-        max-height: 40px;
+        display: block;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        min-height: 40px;
+        background: #000;
+        border-top: 1px solid #333;
+        color: #888;
+        font-family: monospace;
+        padding: 8px;
+        box-sizing: border-box;
+        z-index: 100;
+        /* Above Canvas */
+        text-align: center;
+        opacity: 1;
+        /* Always visible */
+        pointer-events: auto;
+        /* Allow clicking links */
+      }
+
+      #game-info h1 {
+        display: inline-block;
+        font-size: 10px;
+        color: #fff;
+        margin: 0 10px 0 0;
+      }
+
+      #game-info footer {
+        display: inline-block;
+        font-size: 10px;
+      }
+
+      #game-info a {
+        color: #ccc;
+        text-decoration: none;
+        margin: 0 5px;
+      }
+
+      #game-info .content-hidden {
+        /* Hide the bulk text visually but keep it for crawlers */
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
         overflow: hidden;
+        clip: rect(0, 0, 0, 0);
         white-space: nowrap;
-        text-overflow: ellipsis;
-        opacity: 0.5;
+        border: 0;
       }
     }
   </style>
 </head>
 
 <div id="game-info">
-  <h1>Space One: Interstellar Survival</h1>
-  <p>
-    Welcome to <strong>Space One</strong>, an infinite arcade space survival game.
-    Pilot the last <em>MK-IV Interceptor</em> through the quarantine sector.
-  </p>
-
-  <section>
-    <h2>Game Instructions</h2>
-    <ul>
-      <li><strong>Move:</strong> Use Arrow Keys (Desktop) or Drag Joystick (Mobile) to navigate.</li>
-      <li><strong>Dodge:</strong> Avoid colliding with asteroids and planets.</li>
-      <li><strong>Survive:</strong> Red missiles track your heat signature. Make sharp turns to evade them.</li>
-      <li><strong>Repair:</strong> Collect hearts to repair hull damage.</li>
-    </ul>
-  </section>
-
-  <section>
-    <h2>Lore</h2>
-    <p>
-      The Universe is infinite... unfortunately so are the enemies.
-      Sector 7G quarantine has been lifted. Engines are online.
-      How long can you survive the void?
-    </p>
-  </section>
+  <h1>Space One</h1>
 
   <footer>
-    <p>&copy; 2025 Dropdown. All rights reserved.</p>
+    <span>&copy; 2025 Dropdown</span> |
+    <a href="https://whatisgoingon.notion.site/Privacy-Policy-2da8cdd3705380b7b730e3ff224156cd?source=copy_link"
+      target="_blank">Privacy</a> |
+    <a href="https://whatisgoingon.notion.site/Terms-of-Service-2da8cdd3705380dbb484d46d09ba83d9?source=copy_link"
+      target="_blank">Terms</a>
   </footer>
+
+  <!-- Semantic Content for AdSense (Hidden from UI, Visible to Crawler) -->
+  <div class="content-hidden">
+    <p>
+      Welcome to <strong>Space One: Interstellar Survival</strong>.
+      Pilot the last <em>MK-IV Interceptor</em> through the quarantine sector.
+    </p>
+    <section>
+      <h2>Game Instructions</h2>
+      <ul>
+        <li><strong>Move:</strong> Use Arrow Keys (Desktop) or Drag Joystick (Mobile) to navigate.</li>
+        <li><strong>Dodge:</strong> Avoid colliding with asteroids and planets.</li>
+        <li><strong>Survive:</strong> Red missiles track your heat signature. Make sharp turns to evade them.</li>
+        <li><strong>Repair:</strong> Collect hearts to repair hull damage.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Lore</h2>
+      <p>
+        The Universe is infinite... unfortunately so are the enemies.
+        Sector 7G quarantine has been lifted. Engines are online.
+        How long can you survive the void?
+      </p>
+    </section>
+  </div>
 </div>
 
 <div id="app"></div>

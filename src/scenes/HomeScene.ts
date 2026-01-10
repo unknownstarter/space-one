@@ -23,9 +23,10 @@ export class HomeScene extends Phaser.Scene {
     private instructionsText!: Phaser.GameObjects.Text;
 
     // Footer Links
-    private copyright!: Phaser.GameObjects.Text;
-    private privacy!: Phaser.GameObjects.Text;
-    private terms!: Phaser.GameObjects.Text;
+    // Footer Links - Removed for HTML replacement
+    // private copyright!: Phaser.GameObjects.Text;
+    // private privacy!: Phaser.GameObjects.Text;
+    // private terms!: Phaser.GameObjects.Text;
 
     constructor() {
         super('HomeScene');
@@ -97,23 +98,9 @@ export class HomeScene extends Phaser.Scene {
             color: '#aaaaaa'
         }).setOrigin(0.5);
 
-        // 6. Footer
-        const footerStyle = { fontSize: '12px', color: '#666666' };
-
-        this.copyright = this.add.text(cx, 0, '© 2025 Dropdown', footerStyle)
-            .setOrigin(0.5)
-            .setInteractive({ useHandCursor: true });
-        this.copyright.on('pointerdown', () => window.open('https://www.dropdown.xyz/', '_blank'));
-
-        this.privacy = this.add.text(cx, 0, 'Privacy Policy', footerStyle)
-            .setOrigin(0.5)
-            .setInteractive({ useHandCursor: true });
-        this.privacy.on('pointerdown', () => window.open('https://whatisgoingon.notion.site/Privacy-Policy-2da8cdd3705380b7b730e3ff224156cd?source=copy_link', '_blank'));
-
-        this.terms = this.add.text(cx, 0, 'Terms of Service', footerStyle)
-            .setOrigin(0.5)
-            .setInteractive({ useHandCursor: true });
-        this.terms.on('pointerdown', () => window.open('https://whatisgoingon.notion.site/Terms-of-Service-2da8cdd3705380dbb484d46d09ba83d9?source=copy_link', '_blank'));
+        // 6. Footer - Removed in favor of HTML Footer
+        // const footerStyle = { fontSize: '12px', color: '#666666' };
+        // ... (Removed)
 
         // 7. Lore / Tips Section (Policy Compliance Content)
         this.createLoreSection(cx);
@@ -205,13 +192,11 @@ export class HomeScene extends Phaser.Scene {
         this.instructionsText.setPosition(cx, instructionsY);
 
         // Footer - Always at bottom
+        // Footer - Removed
         const footerY = h - 30;
-        this.copyright.setPosition(cx, footerY - 20);
-        this.privacy.setPosition(cx - 80, footerY);
-        this.terms.setPosition(cx + 80, footerY); // Spread out more?
-        // Let's adjust footer spread on mobile vs desktop?
-        // Current: -80 and +80. If width is small, might overlap?
-        // 80px * 2 = 160px width. Mobile is 320px+. Should be fine.
+        // this.copyright.setPosition(cx, footerY - 20);
+        // this.privacy.setPosition(cx - 80, footerY);
+        // this.terms.setPosition(cx + 80, footerY);
 
         // Lore Box Position
         // Must be ABOVE footer, but BELOW instructions.

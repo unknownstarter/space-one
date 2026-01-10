@@ -94,8 +94,10 @@ export class GameOverScene extends Phaser.Scene {
             this.add.text(width / 2, currentY + 80, 'NO LIVES LEFT', { color: '#666', fontSize: '16px' }).setOrigin(0.5);
         }
 
-        // HOME (Small, Bottom)
-        const homeText = this.add.text(width / 2, height - 50, 'HOME', {
+        // HOME (Small, Bottom) - Removed or moved? 
+        // Keeping "HOME" as a restart action is fine, but visually it might conflict with the footer.
+        // Let's move it UP or rename it. "MAIN MENU".
+        const homeText = this.add.text(width / 2, height - 150, 'MAIN MENU', {
             fontSize: '18px',
             color: '#888',
             fontFamily: 'monospace'
