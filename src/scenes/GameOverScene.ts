@@ -41,7 +41,7 @@ export class GameOverScene extends Phaser.Scene {
         FirebaseAPI.saveScore(this.nickname, this.score, sid);
 
         // TITLE
-        this.add.text(width / 2, height * 0.2, 'GAME OVER', {
+        this.add.text(width / 2, height * 0.15, 'GAME OVER', {
             fontSize: '56px',
             color: '#' + COLORS.ACCENT_RED.toString(16),
             fontStyle: 'bold',
@@ -49,7 +49,7 @@ export class GameOverScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // SCORE
-        this.add.text(width / 2, height * 0.35, `${this.score.toFixed(1)}s`, {
+        this.add.text(width / 2, height * 0.30, `${this.score.toFixed(1)}s`, {
             fontSize: '64px',
             color: '#ffffff',
             fontStyle: 'bold',
@@ -57,13 +57,14 @@ export class GameOverScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // BEST
-        this.add.text(width / 2, height * 0.45, `BEST: ${bestScore.toFixed(1)}s` + (isNewBest ? ' (NEW!)' : ''), {
+        this.add.text(width / 2, height * 0.40, `BEST: ${bestScore.toFixed(1)}s` + (isNewBest ? ' (NEW!)' : ''), {
             fontSize: '24px',
             color: '#' + COLORS.ACCENT_YELLOW.toString(16),
             fontFamily: 'monospace'
         }).setOrigin(0.5);
 
-        let currentY = height * 0.6;
+        let currentY = height * 0.55;
+        const gap = 70;
 
         // REPLAY (Big)
         new Button(this, width / 2, currentY, 'REPLAY', () => {
@@ -72,7 +73,7 @@ export class GameOverScene extends Phaser.Scene {
         });
 
         // CONTINUE (Ad) - Position relative to Replay
-        let nextY = currentY + 80;
+        let nextY = currentY + gap;
         if (this.canContinue) {
             const adContainer = this.add.container(width / 2, nextY);
 
@@ -89,13 +90,13 @@ export class GameOverScene extends Phaser.Scene {
         }
 
         // RANKING (Small) - Below Continue
-        nextY += 80;
+        nextY += gap;
         new Button(this, width / 2, nextY, 'RANKING', () => {
             new RankingPopup(this, () => { });
         });
 
         // MAIN MENU - Below Ranking
-        nextY += 80;
+        nextY += gap;
         const homeText = this.add.text(width / 2, nextY, 'MAIN MENU', {
             fontSize: '18px',
             color: '#888',
