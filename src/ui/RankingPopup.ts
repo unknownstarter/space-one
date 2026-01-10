@@ -18,13 +18,20 @@ export class RankingPopup extends Phaser.GameObjects.Container {
         this.add(overlay);
 
         // 2. Popup Body
+        const safeHeight = height - 100; // Footer space
+        const targetH = Math.min(600, safeHeight);
+
         const popupW = Math.min(width * 0.9, 400);
-        const popupH = 600;
+        const popupH = targetH;
+
         const bg = scene.add.rectangle(width / 2, height / 2, popupW, popupH, 0x222222).setStrokeStyle(2, COLORS.ACCENT_YELLOW);
         this.add(bg);
 
+        // Adjust offsets
+        const halfH = popupH / 2;
+
         // 3. Title
-        const title = scene.add.text(width / 2, height / 2 - 250, 'TOP 10 PILOTS', {
+        const title = scene.add.text(width / 2, height / 2 - halfH + 50, 'TOP 10 PILOTS', {
             fontSize: '32px',
             color: '#ffffff',
             fontStyle: 'bold',
@@ -41,14 +48,14 @@ export class RankingPopup extends Phaser.GameObjects.Container {
         this.add(loadingText);
 
         // 5. Close Button
-        const closeBtn = new Button(scene, width / 2, height / 2 + 230, 'CLOSE', () => {
+        const closeBtn = new Button(scene, width / 2, height / 2 + halfH - 70, 'CLOSE', () => {
             this.destroy();
             onClose();
         });
         this.add(closeBtn);
 
-        // 6. Fetch Data
-        this.fetchAndDisplay(scene, loadingText, width / 2, height / 2 - 200);
+        // 6. Fetch Data - Adjust startY based on dynamic height
+        this.fetchAndDisplay(scene, loadingText, width / 2, height / 2 - halfH + 100);
     }
 
     async fetchAndDisplay(scene: Phaser.Scene, loadingText: Phaser.GameObjects.Text, startX: number, startY: number) {

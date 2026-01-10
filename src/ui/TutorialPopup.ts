@@ -23,8 +23,11 @@ export class TutorialPopup extends Phaser.GameObjects.Container {
         this.bg.setInteractive(); // Block clicks below
 
         // Popup Panel
+        // Ensure we leave space at bottom for the footer (approx 60px)
+        const safeHeight = height - 80;
         const panelW = Math.min(600, width * 0.9);
-        const panelH = Math.min(800, height * 0.9);
+        const panelH = Math.min(800, safeHeight * 0.95);
+
         this.panel = scene.add.rectangle(cx, cy, panelW, panelH, 0x111111);
         this.panel.setStrokeStyle(4, 0x00ffff);
 
