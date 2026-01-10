@@ -68,19 +68,13 @@ export class GameOverScene extends Phaser.Scene {
         // REPLAY (Big)
         new Button(this, width / 2, currentY, 'REPLAY', () => {
             // AdManager.hideBanner();
-            this.scene.start('GameScene', { restart: true });
+            this.scene.start('GameScene', { restart: true, nickname: this.nickname });
         });
 
-        // RANKING (Small)
-        new Button(this, width / 2, currentY + 160, 'RANKING', () => {
-            new RankingPopup(this, () => { });
-        });
-
-        // CONTINUE (Ad)
+        // CONTINUE (Ad) - Position relative to Replay
+        let nextY = currentY + 80;
         if (this.canContinue) {
-            const adY = currentY + 80;
-
-            const adContainer = this.add.container(width / 2, adY);
+            const adContainer = this.add.container(width / 2, nextY);
 
             const btnBg = this.add.rectangle(0, 0, 220, 50, COLORS.UI_BG).setStrokeStyle(2, COLORS.FG);
             btnBg.setInteractive({ useHandCursor: true });
@@ -91,13 +85,18 @@ export class GameOverScene extends Phaser.Scene {
 
             adContainer.add([btnBg, heart, txt]);
         } else {
-            this.add.text(width / 2, currentY + 80, 'NO LIVES LEFT', { color: '#666', fontSize: '16px' }).setOrigin(0.5);
+            this.add.text(width / 2, nextY, 'NO LIVES LEFT', { color: '#666', fontSize: '16px' }).setOrigin(0.5);
         }
 
-        // HOME (Small, Bottom) - Removed or moved? 
-        // Keeping "HOME" as a restart action is fine, but visually it might conflict with the footer.
-        // Let's move it UP or rename it. "MAIN MENU".
-        const homeText = this.add.text(width / 2, height - 150, 'MAIN MENU', {
+        // RANKING (Small) - Below Continue
+        nextY += 80;
+        new Button(this, width / 2, nextY, 'RANKING', () => {
+            new RankingPopup(this, () => { });
+        });
+
+        // MAIN MENU - Below Ranking
+        nextY += 80;
+        const homeText = this.add.text(width / 2, nextY, 'MAIN MENU', {
             fontSize: '18px',
             color: '#888',
             fontFamily: 'monospace'

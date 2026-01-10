@@ -12,25 +12,28 @@ export class DifficultySystem {
         };
 
         if (timeAliveSec < 10) {
-            // WARM UP (0-10s)
-            // Gentle start, learning controls
-            params.spawnRate = 1.0; // Reduced from 2.0
-            params.speed = 220; // Reduced from 300
-        } else if (timeAliveSec < 25) {
-            // LOW INTENSITY (10-25s)
-            // Gradual increase
-            params.spawnRate = 2.5; // Was 4.0 at 10s
-            params.speed = 350; // Was 450
-        } else if (timeAliveSec < 50) {
-            // RAMP UP (25-50s)
-            // Getting serious
-            params.spawnRate = 5.0;
-            params.speed = 500;
+            // PHASE 1 (0-10s)
+            // Dense spawn but slow speed (Learning to dodge)
+            params.spawnRate = 2.5;
+            params.speed = 200;
+        } else if (timeAliveSec < 20) {
+            // PHASE 2 (10-20s)
+            // More meteors, slightly faster
+            params.spawnRate = 4.0;
+            params.speed = 250;
+        } else if (timeAliveSec < 30) {
+            // PHASE 3 (20-30s)
+            // Ramp up speed
+            params.spawnRate = 6.0;
+            params.speed = 350;
         } else {
-            // CHAOS (>50s)
+            // CHAOS (>30s)
             // Survival mode
-            params.spawnRate = 8.0 + (timeAliveSec - 50) * 0.2;
-            params.speed = 700;
+            params.spawnRate = 8.0 + (timeAliveSec - 30) * 0.2;
+            // Cap speed
+            let s = 600 + (timeAliveSec - 30) * 5;
+            if (s > 800) s = 800;
+            params.speed = s;
         }
 
         return params;
