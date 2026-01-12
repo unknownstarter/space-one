@@ -4,247 +4,319 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Space Survival</title>
+
+  <!-- SEO & Social Meta Tags -->
+  <title>Space One - Interstellar Survival Web Game</title>
+  <meta name="description"
+    content="Play Space One, the ultimate browser-based space survival game. Pilot your ship, dodge asteroids, and survive the infinite void. Free to play on desktop and mobile." />
+  <meta name="keywords" content="space game, browser game, survival game, asteroid dodge, web game, html5 game" />
+  <link rel="canonical" href="https://space-one.xyz/" />
+
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Space One - Survive the Void" />
+  <meta property="og:description"
+    content="Pilot the MK-IV Interceptor. Dodge meteor showers. How long can you survive?" />
+  <meta property="og:image" content="/og-image.jpg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://space-one.xyz/" />
+
   <link rel="icon" type="image/jpeg" href="/favicon.jpg" />
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5HRPSC10P4"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     gtag('config', 'G-5HRPSC10P4');
   </script>
 
-  <!-- Open Graph Data -->
-  <meta property="og:title" content="Space One!" />
-  <meta property="og:description" content="사방에서 날라오는 행성들! 
-넌 몇초나 버틸 수 있어?" />
-  <meta property="og:image" content="/og-image.jpg" />
-  <meta property="og:type" content="website" />
-
+  <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1886599828759613"
     crossorigin="anonymous"></script>
+
   <style>
+    /* Reset & Base Styles */
     body {
       margin: 0;
       padding: 0;
-      background-color: #000;
-      overflow: hidden;
-      touch-action: none;
-      /* Prevent browser zooming/scrolling */
+      background-color: #050505;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
     }
 
+    /* Layout Structure */
+    #main-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Game Container - The "Hero" Interaction Area */
     #app {
-      width: 100vw;
+      width: 100%;
       height: 100vh;
-    }
-
-    /* #ad-banner-bottom {
-      display: none; 
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 320px;
-      height: 50px;
-      background-color: transparent;
-      z-index: 9999;
-      pointer-events: none;
-    } */
-
-    #game-info {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      max-height: 20%;
-      overflow-y: auto;
-      background: rgba(0, 0, 0, 0.8);
-      color: #888;
-      font-family: monospace;
-      padding: 10px;
-      box-sizing: border-box;
-      z-index: 10;
-      /* Visible above background but maybe below some UI? */
-      display: none;
-      /* Intitially hidden, but we might need it for bots? */
-    }
-
-    /* Make it visible for bots/crawlers but unobtrusive for players */
-    /* Strategy: A "Read More" or just visible text at bottom */
-    #game-info {
-      display: block;
-      opacity: 0.8;
-      pointer-events: none;
-      /* Click through to game if needed, though bottom is footer */
-      font-size: 10px;
-      text-align: center;
-      border-top: 1px solid #333;
-    }
-
-    #game-info h1,
-    #game-info h2 {
-      font-size: 12px;
-      color: #aaa;
-      margin: 2px 0;
-      display: inline-block;
-      margin-right: 10px;
-    }
-
-    #game-info p,
-    #game-info ul {
-      margin: 2px 0;
-      display: inline;
-    }
-
-    #game-info li {
-      display: inline;
-      margin-right: 5px;
-    }
-
-    #game-info footer {
-      display: none;
-      /* Hide footer dup */
-    }
-
-    /* Global Footer Styling (Applies to all screens) */
-    #game-info {
-      display: block;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: auto;
-      min-height: 40px;
+      /* Full viewport height for game focus */
       background: #000;
-      border-top: 1px solid #333;
-      color: #888;
-      font-family: monospace;
-      padding: 8px;
-      box-sizing: border-box;
-      z-index: 100;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Content Section - Scrolling below the game */
+    #content-section {
+      background: linear-gradient(to bottom, #0a0a0a, #111111);
+      padding: 40px 20px;
+      line-height: 1.6;
+      z-index: 5;
+    }
+
+    .content-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: #fff;
+      border-bottom: 2px solid #333;
+      padding-bottom: 10px;
+      margin-top: 40px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      border-bottom: none;
       text-align: center;
-      opacity: 1;
-      pointer-events: auto;
+      margin-top: 0;
+      text-shadow: 0 0 20px rgba(0, 150, 255, 0.3);
     }
 
-    #game-info h1 {
-      display: inline-block;
-      font-size: 14px;
-      color: #fff;
-      margin: 0 15px 0 0;
-    }
-
-    #game-info footer {
-      display: inline-block;
-      font-size: 12px;
-    }
-
-    #game-info a {
+    p {
+      margin-bottom: 20px;
+      font-size: 1.1em;
       color: #ccc;
-      text-decoration: none;
-      margin: 0 8px;
     }
 
-    #game-info a:hover {
+    ul {
+      margin-bottom: 20px;
+    }
+
+    li {
+      margin-bottom: 10px;
+      color: #ccc;
+    }
+
+    strong {
       color: #fff;
-      text-decoration: underline;
     }
 
-    /* Visually Hidden Content for Crawler (Applies globally) */
-    /* NUCLEAR OPTION: Ensure this is absolutely hidden from the visual UI */
-    #game-info .content-hidden {
-      position: absolute;
-      left: -9999px;
-      top: -9999px;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: 0;
+    /* Tables for Controls */
+    .controls-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: #1a1a1a;
+      border-radius: 8px;
       overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      /* Fallback */
-      clip-path: inset(50%);
-      /* Modern */
-      white-space: nowrap;
-      border: 0;
-      opacity: 0;
-      /* Make it invisible */
-      pointer-events: none;
-      /* No interaction */
-      visibility: hidden;
-      /* Hides from screen readers too, but Google Bot parses DOM. Safe? */
-      /* Actually, 'visibility: hidden' might be skipped by some bots as 'not on page'. 
-         Let's stick to the off-screen + opacity + clip method which is standard 'sr-only'.
-      */
-      visibility: visible;
     }
 
-    @media (max-width: 600px) {
+    .controls-table th,
+    .controls-table td {
+      text-align: left;
+      padding: 15px;
+      border-bottom: 1px solid #333;
+    }
 
-      /* Mobile Adjustments */
-      #game-info {
-        padding: 5px;
+    .controls-table th {
+      background: #222;
+      color: #fff;
+    }
+
+    /* Update Log Styling */
+    .update-entry {
+      border-left: 3px solid #3498db;
+      padding-left: 20px;
+      margin-bottom: 20px;
+      background: rgba(52, 152, 219, 0.05);
+      padding: 15px 20px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .update-date {
+      color: #888;
+      font-size: 0.9em;
+      margin-bottom: 5px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      margin-top: 60px;
+      border-top: 1px solid #222;
+      color: #666;
+    }
+
+    footer a {
+      color: #888;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #fff;
+    }
+
+    /* Ad Placeholders */
+    .ad-placeholder {
+      width: 100%;
+      height: 100px;
+      background: #111;
+      border: 1px dashed #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #444;
+      margin: 30px 0;
+      text-transform: uppercase;
+      font-size: 0.8em;
+      letter-spacing: 1px;
+    }
+
+    /* Mobile Responsive Adjustments */
+    @media (max-width: 768px) {
+      #app {
+        height: 80vh;
+        /* Slightly smaller on mobile to hint at scroll */
       }
 
-      #game-info h1 {
-        font-size: 10px;
-        margin-right: 5px;
+      h1 {
+        font-size: 1.8em;
       }
 
-      #game-info footer {
-        font-size: 10px;
-      }
-
-      #game-info a {
-        margin: 0 4px;
+      .content-container {
+        padding: 0 10px;
       }
     }
   </style>
 </head>
 
-<div id="game-info">
-  <h1>Space One</h1>
+<body>
+  <div id="main-wrapper">
+    <!-- Game Area -->
+    <div id="app"></div>
 
-  <footer>
-    <span>&copy; 2025 Dropdown</span> |
-    <a href="https://whatisgoingon.notion.site/Privacy-Policy-2da8cdd3705380b7b730e3ff224156cd?source=copy_link"
-      target="_blank">Privacy</a> |
-    <a href="https://whatisgoingon.notion.site/Terms-of-Service-2da8cdd3705380dbb484d46d09ba83d9?source=copy_link"
-      target="_blank">Terms</a>
-  </footer>
+    <!-- Rich Content Area (For AdSense & SEO) -->
+    <div id="content-section">
+      <div class="content-container">
 
-  <!-- Semantic Content for AdSense (Hidden from UI, Visible to Crawler) -->
-  <div class="content-hidden">
-    <p>
-      Welcome to <strong>Space One: Interstellar Survival</strong>.
-      Pilot the last <em>MK-IV Interceptor</em> through the quarantine sector.
-    </p>
-    <section>
-      <h2>Game Instructions</h2>
-      <ul>
-        <li><strong>Move:</strong> Use Arrow Keys (Desktop) or Drag Joystick (Mobile) to navigate.</li>
-        <li><strong>Dodge:</strong> Avoid colliding with asteroids and planets.</li>
-        <li><strong>Survive:</strong> Red missiles track your heat signature. Make sharp turns to evade them.</li>
-        <li><strong>Repair:</strong> Collect hearts to repair hull damage.</li>
-      </ul>
-    </section>
-    <section>
-      <h2>Lore</h2>
-      <p>
-        The Universe is infinite... unfortunately so are the enemies.
-        Sector 7G quarantine has been lifted. Engines are online.
-        How long can you survive the void?
-      </p>
-    </section>
+        <!-- Ad Placeholder Top -->
+        <!-- <div class="ad-placeholder">Advertisement Space</div> -->
+
+        <header>
+          <h1>Space One: Interstellar Survival</h1>
+          <p>
+            Welcome to <strong>Space One</strong>, the ultimate test of reflexes and endurance in the harsh vacuum of
+            space.
+            You are the pilot of the last remaining <em>MK-IV Interceptor</em>, stranded in a dense asteroid field with
+            hostile alien technology tracking your every move.
+            Your mission is simple: <strong>Survive</strong>.
+          </p>
+        </header>
+
+        <section id="guide">
+          <h2>👨‍🚀 Pilot's Manual (How to Play)</h2>
+          <p>Mastering your ship is the key to survival. The controls are designed for precision dodging.</p>
+
+          <table class="controls-table">
+            <thead>
+              <tr>
+                <th>Action</th>
+                <th>Desktop Layout</th>
+                <th>Mobile Layout</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Movement</strong></td>
+                <td>Arrow Keys / WASD</td>
+                <td>Virtual Joystick (Bottom Left)</td>
+              </tr>
+              <tr>
+                <td><strong>Pause Game</strong></td>
+                <td>ESC Key</td>
+                <td>Pause Button (Top Right)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="tips">
+          <h2>💡 Pro Strategic Tips</h2>
+          <ul>
+            <li><strong>Momentum is Key:</strong> Your ship has inertia. Don't wait until the last second to change
+              direction. Anticipate the asteroid and missile paths.</li>
+            <li><strong>Red Alert:</strong> Red missiles are heat-seeking. They will follow you! Make sharp, sudden
+              turns to break their tracking lock or lead them into asteroids.</li>
+            <li><strong>Shield Management:</strong> Collecting hearts repairs your hull. Don't risk a collision for a
+              heart if your health is full, but prioritize them when low.</li>
+            <li><strong>Zone Awareness:</strong> The center of the screen is safest, but also the most crowded. The
+              edges offer escape routes but limit your maneuverability.</li>
+          </ul>
+        </section>
+
+        <section id="updates">
+          <h2>🚀 Updates & Roadmap</h2>
+
+          <div class="update-entry">
+            <div class="update-date">January 2026 - v1.2.0</div>
+            <strong>Mobile Control Update</strong>
+            <p>Added a virtual joystick for smoother navigation on touch devices. Fixed leaderboard UI overlap issues.
+            </p>
+          </div>
+
+          <div class="update-entry">
+            <div class="update-date">December 2025 - v1.1.0</div>
+            <strong>Global Leaderboards</strong>
+            <p>Compete with pilots worldwide! Scores are now tracked globally. Can you reach the top 10?</p>
+          </div>
+
+          <div class="update-entry">
+            <div class="update-date">Planned Features</div>
+            <strong>Future Roadmap</strong>
+            <ul>
+              <li>Ship Customization (Unlockable skins)</li>
+              <li>Power-ups (Shield bursts, Speed boosts)</li>
+              <li>New Enemy Types (Lasers, Area denial)</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Ad Placeholder Bottom -->
+        <!-- <div class="ad-placeholder">Advertisement Space</div> -->
+
+        <footer>
+          <p>&copy; 2026 Space One. All rights reserved.</p>
+          <p>
+            <a href="/privacy.html">Privacy Policy</a> |
+            <a href="/terms.html">Terms of Service</a> |
+            <a href="mailto:support@space-one.xyz">Contact Us</a>
+          </p>
+          <p style="font-size: 0.8em; color: #444; margin-top: 20px;">
+            Space One is a free-to-play browser game. Advertisements support our server costs and development.
+          </p>
+        </footer>
+
+      </div>
+    </div>
   </div>
-</div>
 
-<div id="app"></div>
-
-<script type="module" src="/src/main.ts"></script>
+  <!-- Game Logic -->
+  <script type="module" src="/src/main.ts"></script>
 </body>
 
 </html>
