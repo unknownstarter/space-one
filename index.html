@@ -302,14 +302,47 @@
       </div>
     </div>
 
-    <!-- Restored Overlay Footer for Immediate Visibility -->
-    <div id="overlay-footer">
-      <span>&copy; 2026 Dropdown</span> |
-      <a href="/privacy.html" target="_blank">Privacy</a> |
-      <a href="/terms.html" target="_blank">Terms</a>
-    </div>
-
   </div>
+
+  <!-- Restored Overlay Footer for Immediate Visibility -->
+  <div id="overlay-footer">
+    <span>&copy; 2026 Dropdown</span> |
+    <a href="/privacy.html" target="_blank">Privacy</a> |
+    <a href="/terms.html" target="_blank">Terms</a>
+  </div>
+
+  <style>
+    /* Overlay footer to ensure links are visible on the game screen */
+    #overlay-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      padding: 8px 10px;
+      background: rgba(0, 0, 0, 0.85);
+      /* Slightly darker/more opaque */
+      border-top: 1px solid #333;
+      color: #aaa;
+      /* Lighter text */
+      font-family: monospace;
+      font-size: 13px;
+      text-align: center;
+      z-index: 9999;
+      /* Max z-index */
+      pointer-events: auto;
+    }
+
+    #overlay-footer a {
+      color: #ccc;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    #overlay-footer a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+  </style>
 
   <!-- Game Logic -->
   <script type="module" src="/src/main.ts"></script>
