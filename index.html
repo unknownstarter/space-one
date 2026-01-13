@@ -299,12 +299,24 @@
         <!-- Ad Placeholder Bottom -->
         <!-- <div class="ad-placeholder">Advertisement Space</div> -->
 
+        <footer>
+          <p>&copy; 2026 Dropdown. All rights reserved.</p>
+          <p>
+            <a href="/privacy.html">Privacy Policy</a> |
+            <a href="/terms.html">Terms of Service</a> |
+            <a href="mailto:support@space-one.xyz">Contact Us</a>
+          </p>
+          <p style="font-size: 0.8em; color: #444; margin-top: 20px;">
+            Space One is a free-to-play browser game. Advertisements support our server costs and development.
+          </p>
+        </footer>
+
       </div>
     </div>
 
   </div>
 
-  <!-- Restored Overlay Footer for Immediate Visibility -->
+  <!-- Restored Overlay Footer for Immediate Visibility (Desktop Only) -->
   <div id="overlay-footer">
     <span>&copy; 2026 Dropdown</span> |
     <a href="/privacy.html" target="_blank">Privacy</a> |
@@ -318,17 +330,14 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      padding: 8px 10px;
+      padding: 5px 10px;
       background: rgba(0, 0, 0, 0.85);
-      /* Slightly darker/more opaque */
       border-top: 1px solid #333;
       color: #aaa;
-      /* Lighter text */
       font-family: monospace;
       font-size: 13px;
       text-align: center;
       z-index: 9999;
-      /* Max z-index */
       pointer-events: auto;
     }
 
@@ -341,6 +350,27 @@
     #overlay-footer a:hover {
       color: #fff;
       text-decoration: underline;
+    }
+
+    /* Mobile Responsive Adjustments */
+    @media (max-width: 768px) {
+      #app {
+        height: 100vh;
+        /* Restore full height on mobile */
+      }
+
+      #overlay-footer {
+        display: none;
+        /* Hide fixed footer on mobile */
+      }
+
+      h1 {
+        font-size: 1.8em;
+      }
+
+      .content-container {
+        padding: 0 10px;
+      }
     }
   </style>
 
