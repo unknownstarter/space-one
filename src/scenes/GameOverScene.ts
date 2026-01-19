@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { Button } from '../ui/Button';
 import { Storage } from '../sdk/storage';
 import { COLORS } from '../types';
-import { RevivePopup } from '../ui/RevivePopup';
+// import { RevivePopup } from '../ui/RevivePopup';
 import { FirebaseAPI } from '../sdk/firebase';
 import { RankingPopup } from '../ui/RankingPopup';
 import { Analytics } from '../sdk/analytics';
@@ -117,12 +117,8 @@ export class GameOverScene extends Phaser.Scene {
     }
 
     async handleContinue() {
-        // Open the Revive Popup with Ad
-        new RevivePopup(this, () => {
-            // Callback when "Reward" is clicked
-            // AdManager.hideBanner();
-            this.scene.resume('GameScene', { isContinue: true });
-            this.scene.stop();
-        });
+        // Directly resume GameScene without popup
+        this.scene.resume('GameScene', { isContinue: true });
+        this.scene.stop();
     }
 }
