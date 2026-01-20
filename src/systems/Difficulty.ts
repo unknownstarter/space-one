@@ -4,7 +4,7 @@ export class DifficultySystem {
     // Aggressive speed ramping to ensure player cannot outrun meteors
     static getParams(timeAliveSec: number): DifficultyParams {
         const baseSpeed = 200;
-        const speedIncrementPerSec = 10;
+        const speedIncrementPerSec = 5; // Reduced from 10 to make it easier
         const maxSpeed = 800;
 
         const baseSpawnRate = 3.0; // Increased base from 1.5/2.5 for more meteors
