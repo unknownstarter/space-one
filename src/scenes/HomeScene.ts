@@ -4,7 +4,7 @@ import { Button } from '../ui/Button';
 import { TutorialPopup } from '../ui/TutorialPopup';
 import { RankingPopup } from '../ui/RankingPopup';
 import { Analytics } from '../sdk/analytics';
-// import { AdManager } from '../sdk/AdManager';
+import { AdManager } from '../sdk/AdManager';
 
 interface BackgroundObj {
     sprite: Phaser.GameObjects.Image;
@@ -107,8 +107,8 @@ export class HomeScene extends Phaser.Scene {
         // 7. Lore / Tips Section (Policy Compliance Content)
         this.createLoreSection(cx);
 
-        // CHECK: Ad removed for policy compliance
-        // AdManager.showBanner('3614039774');
+        // CHECK: Ad removed for policy compliance (Actually        // SHOW AD Banner (Safe because we have content on this screen)
+        AdManager.showBanner();
     }
 
     private createLoreSection(cx: number) {

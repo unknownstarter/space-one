@@ -5,6 +5,7 @@ import { Spawner } from '../systems/Spawner';
 import { CollisionSystem } from '../systems/Collision';
 import { HUD } from '../ui/HUD';
 import { Storage } from '../sdk/storage';
+import { AdManager } from '../sdk/AdManager';
 
 interface Star {
     sprite: Phaser.GameObjects.Image;
@@ -63,6 +64,7 @@ export class GameScene extends Phaser.Scene {
 
     create(data: { restart: boolean, nickname?: string }) {
         console.log('GameScene: create', data.nickname);
+        AdManager.hideBanner();
         if (data.nickname) this.nickname = data.nickname;
         this.cameras.main.setBackgroundColor(COLORS.BG);
 

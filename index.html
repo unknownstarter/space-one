@@ -80,6 +80,15 @@
       z-index: 20;
     }
 
+    /* In-Game Mode: Hide Banner & Expand App */
+    #main-wrapper.in-game #top-ad-banner {
+      display: none;
+    }
+
+    #main-wrapper.in-game #app {
+      height: 100vh;
+    }
+
     /* Content Section - Scrolling below the game */
     #content-section {
       background: linear-gradient(to bottom, #0a0a0a, #111111);
@@ -224,7 +233,7 @@
 <body>
   <div id="main-wrapper">
     <!-- Top Ad Banner -->
-    <div id="top-ad-banner">
+    <div id="top-ad-banner" style="display: none;">
       <!-- Google AdSense - Top Banner -->
       <ins class="adsbygoogle" style="display:inline-block;width:100%;height:90px"
         data-ad-client="ca-pub-1886599828759613" data-ad-slot="3614039774"></ins>

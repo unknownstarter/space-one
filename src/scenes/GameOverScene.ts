@@ -6,7 +6,7 @@ import { COLORS } from '../types';
 import { FirebaseAPI } from '../sdk/firebase';
 import { RankingPopup } from '../ui/RankingPopup';
 import { Analytics } from '../sdk/analytics';
-// import { AdManager } from '../sdk/AdManager';
+import { AdManager } from '../sdk/AdManager';
 
 export class GameOverScene extends Phaser.Scene {
     private score: number = 0;
@@ -112,8 +112,7 @@ export class GameOverScene extends Phaser.Scene {
         });
 
         // SHOW AD Banner (Safe because we have content on this screen)
-        // User needs to put real slot ID here
-        // AdManager.showBanner('3614039774');
+        AdManager.showBanner();
     }
 
     async handleContinue() {
