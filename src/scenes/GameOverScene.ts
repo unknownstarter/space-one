@@ -42,31 +42,33 @@ export class GameOverScene extends Phaser.Scene {
         FirebaseAPI.saveScore(this.nickname, this.score, sid);
         Analytics.logEvent('game_over', { score: this.score, bestScore });
 
+        const isSmallHeight = height < 600;
+
         // TITLE
-        this.add.text(width / 2, height * 0.15, 'GAME OVER', {
-            fontSize: '56px',
+        this.add.text(width / 2, height * (isSmallHeight ? 0.1 : 0.15), 'GAME OVER', {
+            fontSize: isSmallHeight ? '40px' : '56px',
             color: '#' + COLORS.ACCENT_RED.toString(16),
             fontStyle: 'bold',
             fontFamily: 'monospace'
         }).setOrigin(0.5);
 
         // SCORE
-        this.add.text(width / 2, height * 0.30, `${this.score.toFixed(1)}s`, {
-            fontSize: '64px',
+        this.add.text(width / 2, height * (isSmallHeight ? 0.22 : 0.30), `${this.score.toFixed(1)}s`, {
+            fontSize: isSmallHeight ? '48px' : '64px',
             color: '#ffffff',
             fontStyle: 'bold',
             fontFamily: 'monospace'
         }).setOrigin(0.5);
 
         // BEST
-        this.add.text(width / 2, height * 0.40, `BEST: ${bestScore.toFixed(1)}s` + (isNewBest ? ' (NEW!)' : ''), {
-            fontSize: '24px',
+        this.add.text(width / 2, height * (isSmallHeight ? 0.32 : 0.40), `BEST: ${bestScore.toFixed(1)}s` + (isNewBest ? ' (NEW!)' : ''), {
+            fontSize: isSmallHeight ? '20px' : '24px',
             color: '#' + COLORS.ACCENT_YELLOW.toString(16),
             fontFamily: 'monospace'
         }).setOrigin(0.5);
 
-        let currentY = height * 0.55;
-        const gap = 70;
+        let currentY = height * (isSmallHeight ? 0.45 : 0.55);
+        const gap = isSmallHeight ? 60 : 70;
 
         // REPLAY (Big)
         new Button(this, width / 2, currentY, 'REPLAY', () => {
@@ -79,12 +81,12 @@ export class GameOverScene extends Phaser.Scene {
         if (this.canContinue) {
             const adContainer = this.add.container(width / 2, nextY);
 
-            const btnBg = this.add.rectangle(0, 0, 220, 50, COLORS.UI_BG).setStrokeStyle(2, COLORS.FG);
+            const btnBg = this.add.rectangle(0, 0, 220, isSmallHeight ? 44 : 50, COLORS.UI_BG).setStrokeStyle(2, COLORS.FG);
             btnBg.setInteractive({ useHandCursor: true });
             btnBg.on('pointerdown', () => this.handleContinue());
 
-            const heart = this.add.text(-90, 0, '♥', { color: '#ff0000', fontSize: '24px' }).setOrigin(0.5);
-            const txt = this.add.text(10, 0, `REVIVE (+2s)`, { fontSize: '20px', color: '#fff' }).setOrigin(0.5);
+            const heart = this.add.text(-90, 0, '♥', { color: '#ff0000', fontSize: isSmallHeight ? '20px' : '24px' }).setOrigin(0.5);
+            const txt = this.add.text(10, 0, `REVIVE (+2s)`, { fontSize: isSmallHeight ? '18px' : '20px', color: '#fff' }).setOrigin(0.5);
 
             adContainer.add([btnBg, heart, txt]);
         } else {
@@ -99,8 +101,11 @@ export class GameOverScene extends Phaser.Scene {
 
         // MAIN MENU - Below Ranking
         nextY += gap;
-        const homeText = this.add.text(width / 2, nextY, 'MAIN MENU', {
-            fontSize: '18px',
+        const footerSpace = isSmallHeight ? 30 : 50;
+        const finalY = Math.min(nextY, height - footerSpace);
+
+        const homeText = this.add.text(width / 2, finalY, 'MAIN MENU', {
+            fontSize: isSmallHeight ? '16px' : '18px',
             color: '#888',
             fontFamily: 'monospace'
         }).setOrigin(0.5).setInteractive({ useHandCursor: true });
