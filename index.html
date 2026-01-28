@@ -51,16 +51,13 @@
     #main-wrapper {
       display: flex;
       flex-direction: column;
-      height: 100dvh;
-      /* Use dynamic viewport height for mobile */
-      overflow: hidden;
+      min-height: 100vh;
     }
 
     /* Game Container - The "Hero" Interaction Area */
     #app {
       width: 100%;
-      flex: 1;
-      /* Take remaining space */
+      height: 100vh;
       background: #000;
       position: relative;
       z-index: 10;
