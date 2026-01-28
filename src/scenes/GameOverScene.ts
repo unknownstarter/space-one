@@ -6,7 +6,7 @@ import { COLORS } from '../types';
 import { FirebaseAPI } from '../sdk/firebase';
 import { RankingPopup } from '../ui/RankingPopup';
 import { Analytics } from '../sdk/analytics';
-import { AdManager } from '../sdk/AdManager';
+// import { AdManager } from '../sdk/AdManager';
 
 export class GameOverScene extends Phaser.Scene {
     private score: number = 0;
@@ -116,8 +116,7 @@ export class GameOverScene extends Phaser.Scene {
             location.reload();
         });
 
-        // SHOW AD Banner (Safe because we have content on this screen)
-        AdManager.showBanner();
+        // AdManager.showBanner();
     }
 
     async handleContinue() {

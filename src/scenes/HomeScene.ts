@@ -162,6 +162,8 @@ export class HomeScene extends Phaser.Scene {
         let centerGroupY = cy;
         if (isVerySmallHeight) {
             centerGroupY = h * 0.45;
+        } else if (isMobile) {
+            centerGroupY = cy - 40; // Shift up slightly on mobile
         }
 
         // Input
