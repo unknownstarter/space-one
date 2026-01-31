@@ -49,25 +49,20 @@
 
     /* Layout Structure */
     #main-wrapper {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    #main-wrapper.in-game {
-      /* In-game might need different overflow if we want to allow scrolling to SEO content */
-      /* But the user wants the game to be full screen. */
-      overflow: visible;
+      position: relative;
     }
 
     /* Game Container - The "Hero" Interaction Area */
     #app {
       width: 100%;
-      flex: 1;
+      height: calc(100vh - 90px);
       background: #000;
       position: relative;
       z-index: 10;
+    }
+
+    #main-wrapper.in-game #app {
+      height: 100vh;
     }
 
     /* Top Ad Banner */
